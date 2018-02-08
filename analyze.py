@@ -1,5 +1,6 @@
 import argparse
 from itertools import islice
+from math import isclose
 import sys
 
 import numpy as np
@@ -26,6 +27,12 @@ def point_window_iter(seq):
             first = item
         yield item
     yield item[1:] + (first[1],)
+
+
+def within_tolerance(actual, target, tolerance):
+    diff = abs(target - actual)
+    # Use isclose for handling effective equivalence
+    return diff < tolerance or isclose(diff, tolerance)
 
 
 def get_radians(pnt1, pnt2, pnt3):

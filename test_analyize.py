@@ -1,7 +1,7 @@
 import unittest
 import types
 
-import numpy as np
+import pytest
 
 
 class TestAnalyize(unittest.TestCase):
@@ -40,9 +40,28 @@ class TestAnalyize(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
 
+class TestWithinTolerance(unittest.TestCase):
+
+    def test_within_tolerance(self):
+        from analyze import within_tolerance
+        actual = within_tolerance(90.001, 90, 0.001)
+        self.assertTrue(actual)
+
+    def test_within_tolerance2(self):
+        from analyze import within_tolerance
+        actual = within_tolerance(90.001, 90, 0.0001)
+        self.assertFalse(actual)
+
+    def test_within_tolerance3(self):
+        from analyze import within_tolerance
+        actual = within_tolerance(90, 90.001, 0.0001)
+        self.assertFalse(actual)
+
+
 class TestGetRadians(unittest.TestCase):
 
     def test_get_radians_0(self):
+        import numpy as np
         from analyze import get_radians
 
         a = np.asarray((0, 1))
@@ -54,6 +73,7 @@ class TestGetRadians(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_get_radians_pi(self):
+        import numpy as np
         from analyze import get_radians
 
         a = np.asarray((0, 1))
@@ -65,6 +85,7 @@ class TestGetRadians(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_get_radians_half_pi(self):
+        import numpy as np
         from analyze import get_radians
 
         a = np.asarray((0, 1))
@@ -76,6 +97,7 @@ class TestGetRadians(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_get_radians_half_pi_diff_magnitude(self):
+        import numpy as np
         from analyze import get_radians
 
         a = np.asarray((0, 3))
@@ -87,6 +109,7 @@ class TestGetRadians(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_get_radians_half_pi_all_offset(self):
+        import numpy as np
         from analyze import get_radians
 
         a = np.asarray((1, 3))
