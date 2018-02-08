@@ -34,13 +34,17 @@ def get_radians(pnt1, pnt2, pnt3):
     return np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
 
 
-def main():
+def parse_arguments(args):
     parser = argparse.ArgumentParser(description='Analyzes a tax parcel shapefile')
     parser.add_argument('shapefile', type=str, help='Path to the .shp file')
-    args = parser.parse_args(sys.argv[1:])
+    return parser.parse_args(sys.argv[1:])
 
-    sf = shapefile.Reader(args.shapefile)
-    shapeRecs = sf.shapeRecords()
+
+def main():
+    args = parse_arguments(sys.argv[1:])
+
+    # sf = shapefile.Reader(args.shapefile)
+    # shapeRecs = sf.shapeRecords()
 
 
 if __name__ == '__main__':
