@@ -39,6 +39,9 @@ class TestAnalyize(unittest.TestCase):
         self.assertIsInstance(actual, types.GeneratorType)
         self.assertEqual(expected, list(actual))
 
+
+class TestGetRadians(unittest.TestCase):
+
     def test_get_radians_0(self):
         from analyze import get_radians
 
@@ -59,4 +62,37 @@ class TestAnalyize(unittest.TestCase):
 
         actual = get_radians(a, b, c)
         expected = np.pi
+        self.assertEqual(expected, actual)
+
+    def test_get_radians_half_pi(self):
+        from analyze import get_radians
+
+        a = np.asarray((0, 1))
+        b = np.asarray((0, 0))
+        c = np.asarray((1, 0))
+
+        actual = get_radians(a, b, c)
+        expected = np.pi / 2
+        self.assertEqual(expected, actual)
+
+    def test_get_radians_half_pi_diff_magnitude(self):
+        from analyze import get_radians
+
+        a = np.asarray((0, 3))
+        b = np.asarray((0, 0))
+        c = np.asarray((1.7, 0))
+
+        actual = get_radians(a, b, c)
+        expected = np.pi / 2
+        self.assertEqual(expected, actual)
+
+    def test_get_radians_half_pi_all_offset(self):
+        from analyze import get_radians
+
+        a = np.asarray((1, 3))
+        b = np.asarray((1, 1))
+        c = np.asarray((1.7, 1))
+
+        actual = get_radians(a, b, c)
+        expected = np.pi / 2
         self.assertEqual(expected, actual)
