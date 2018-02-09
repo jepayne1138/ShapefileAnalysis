@@ -40,6 +40,163 @@ class TestAnalyize(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
 
+class TestPointsInline(unittest.TestCase):
+
+    def test_points_inline(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((0, 1))
+        c = np.asarray((0, 2))
+        tolerance = 0
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_false(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((0.1, 1))
+        c = np.asarray((0, 2))
+        tolerance = 0
+        actual = points_inline(a, b, c, tolerance)
+        self.assertFalse(actual)
+
+    def test_points_inline_within_tolerance(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((0.1, 1))
+        c = np.asarray((0, 2))
+        tolerance = 0.1
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_negative_within_tolerance(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((-0.1, 1))
+        c = np.asarray((0, 2))
+        tolerance = 0.1
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_has_tolerence_but_point_is_beyond(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((-0.5, 1))
+        c = np.asarray((0, 2))
+        tolerance = 0.3
+        actual = points_inline(a, b, c, tolerance)
+        self.assertFalse(actual)
+
+    def test_points_inline_line_offset(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((1, 1))
+        c = np.asarray((2, 2))
+        tolerance = 0
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_but_out_of_segment_negative(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((1, 1))
+        b = np.asarray((.9, 1))
+        c = np.asarray((2, 2))
+        tolerance = 0.5
+        actual = points_inline(a, b, c, tolerance)
+        self.assertFalse(actual)
+
+    def test_points_inline_but_out_of_segment_positive(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((1, 1))
+        b = np.asarray((2, 2.1))
+        c = np.asarray((2, 2))
+        tolerance = 0.5
+        actual = points_inline(a, b, c, tolerance)
+        self.assertFalse(actual)
+
+    def test_points_inline_but_out_of_segment_reversed(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((2, 2))
+        b = np.asarray((2, 2.1))
+        c = np.asarray((1, 1))
+        tolerance = 0.5
+        actual = points_inline(a, b, c, tolerance)
+        self.assertFalse(actual)
+
+    def test_points_inline_midpoint_on_start(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((0, 0))
+        c = np.asarray((0, 1))
+        tolerance = 0.1
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_midpoint_on_end(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 0))
+        b = np.asarray((0, 1))
+        c = np.asarray((0, 1))
+        tolerance = 0.1
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_midpoint_on_start_screwed_translated(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((1, 1))
+        b = np.asarray((1, 1))
+        c = np.asarray((2, 2))
+        tolerance = 0.1
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_midpoint_on_end_screwed_translated(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((1, 1))
+        b = np.asarray((2, 2))
+        c = np.asarray((2, 2))
+        tolerance = 0.1
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+    def test_points_inline_midpoint_reverse_direction(self):
+        import numpy as np
+        from analyze import points_inline
+
+        a = np.asarray((0, 2))
+        b = np.asarray((0, 1))
+        c = np.asarray((0, 0))
+        tolerance = 0.1
+        actual = points_inline(a, b, c, tolerance)
+        self.assertTrue(actual)
+
+
 class TestWithinTolerance(unittest.TestCase):
 
     def test_within_tolerance(self):
