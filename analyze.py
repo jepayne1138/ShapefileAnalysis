@@ -29,10 +29,12 @@ def point_window_iter(seq):
     yield item[1:] + (first[1],)
 
 
-def within_tolerance(actual, target, tolerance):
-    diff = abs(target - actual)
+def within_tolerance(value, within, float_tol=1e-9):
+    if (within < 0):
+        raise ValueError('Argument "within" cannot be negative')
+    abs_value = abs(value)
     # Use isclose for handling effective equivalence
-    return diff < tolerance or isclose(diff, tolerance)
+    return abs_value < within or isclose(abs_value, within, rel_tol=float_tol)
 
 
 def get_radians(pnt1, pnt2, pnt3):

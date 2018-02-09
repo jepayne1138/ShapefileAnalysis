@@ -44,18 +44,33 @@ class TestWithinTolerance(unittest.TestCase):
 
     def test_within_tolerance(self):
         from analyze import within_tolerance
-        actual = within_tolerance(90.001, 90, 0.001)
+        actual = within_tolerance(90.001 - 90, 0.001)
         self.assertTrue(actual)
 
     def test_within_tolerance2(self):
         from analyze import within_tolerance
-        actual = within_tolerance(90.001, 90, 0.0001)
+        actual = within_tolerance(90.001 - 90, 0.0001)
         self.assertFalse(actual)
 
     def test_within_tolerance3(self):
         from analyze import within_tolerance
-        actual = within_tolerance(90, 90.001, 0.0001)
+        actual = within_tolerance(90 - 90.001, 0.0001)
         self.assertFalse(actual)
+
+    def test_within_tolerance4(self):
+        from analyze import within_tolerance
+        actual = within_tolerance(0.5 - 0, 0.4)
+        self.assertFalse(actual)
+
+    def test_within_tolerance5(self):
+        from analyze import within_tolerance
+        actual = within_tolerance(0.5 - 0, 0.49, float_tol=0)
+        self.assertFalse(actual)
+
+    def test_within_tolerance_within_negative(self):
+        from analyze import within_tolerance
+        with self.assertRaises(ValueError):
+            within_tolerance(0.1, -0.1)
 
 
 class TestGetRadians(unittest.TestCase):
