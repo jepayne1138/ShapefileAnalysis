@@ -19,7 +19,7 @@ setup(
     install_requires=requires,
     entry_points={
         'console_scripts': [
-            'analyize = analyize:main',
+            'analyzeshapefile = analyze:main',
         ],
     },
 )
