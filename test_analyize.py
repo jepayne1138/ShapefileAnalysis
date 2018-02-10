@@ -377,3 +377,27 @@ class TestGetRadians(unittest.TestCase):
         actual = get_radians(a, b, c)
         expected = np.pi / 2
         self.assertEqual(expected, actual)
+
+
+class TestPointDataList(unittest.TestCase):
+
+    def test_point_data_list(self):
+        import numpy as np
+        from analyze import point_data_list
+
+        valid_point_list = [
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+            np.asarray((2, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+        ]
+        actual = list(point_data_list(valid_point_list, 0.1))
+        expected = [
+            {'id': 0, 'sig': False},
+            {'id': 1, 'sig': True},
+            {'id': 2, 'sig': True},
+            {'id': 3, 'sig': True},
+        ]
+        self.assertEqual(expected, actual)

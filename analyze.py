@@ -81,6 +81,15 @@ def parse_arguments(args):
     return parser.parse_args(sys.argv[1:])
 
 
+def point_data_list(point_seq, tolerance):
+    for i in range(1, len(point_seq) - 1):
+        p1, p2, p3 = neighbor_window(point_seq, i)
+        yield {
+            'id': i - 1,
+            'sig': not points_inline(p1, p2, p3, tolerance),
+        }
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 
