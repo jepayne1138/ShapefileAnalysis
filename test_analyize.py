@@ -2,6 +2,19 @@ import unittest
 import types
 
 
+def assertArrayEquals(testcase, arr1, arr2):
+    """Helper to assert sequence numpy array equality"""
+    from itertools import zip_longest
+    import numpy as np
+    testcase.assertTrue(
+        all([
+            np.array_equal(e, a)
+            for e, a
+            in zip_longest(arr1, arr2)
+        ])
+    )
+
+
 class TestLessOrClose(unittest.TestCase):
 
     def test_less_or_close_simple(self):
@@ -56,14 +69,7 @@ class TestModifiedPointList(unittest.TestCase):
 
         # NumPy has no implicit array equality,
         # so zip to longest and check all np.array_equals to assert accuracy
-        from itertools import zip_longest
-        self.assertTrue(
-            all([
-                np.array_equal(e, a)
-                for e, a
-                in zip_longest(expected, actual)
-            ])
-        )
+        assertArrayEquals(self, expected, actual)
 
 
 class TestPointWindowIter(unittest.TestCase):
@@ -461,7 +467,7 @@ class TestPointDataList(unittest.TestCase):
 
     def test_point_data_list(self):
         import numpy as np
-        from analyze import point_data_list
+        from analyze import PointData, point_data_list
 
         valid_point_list = [
             np.asarray((0, 0)),
@@ -471,11 +477,105 @@ class TestPointDataList(unittest.TestCase):
             np.asarray((0, 0)),
             np.asarray((1, 1)),
         ]
-        actual = list(point_data_list(valid_point_list, 0.1))
+        actual = list(point_data_list(valid_point_list))
         expected = [
-            {'id': 0, 'sig': False},
-            {'id': 1, 'sig': True},
-            {'id': 2, 'sig': True},
-            {'id': 3, 'sig': True},
+            PointData(np.asarray((0, 0)), np.asarray((1, 1)), np.asarray((2, 2))),
+            PointData(np.asarray((1, 1)), np.asarray((2, 2)), np.asarray((0, 3))),
+            PointData(np.asarray((2, 2)), np.asarray((0, 3)), np.asarray((0, 0))),
+            PointData(np.asarray((0, 3)), np.asarray((0, 0)), np.asarray((1, 1))),
         ]
         self.assertEqual(expected, actual)
+
+
+class TestRemoveInsignificant(unittest.TestCase):
+
+    def test_remove_insignificant(self):
+        import numpy as np
+        from analyze import PointData, remove_insignificant
+
+        point_list = [
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+            np.asarray((2, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+        ]
+        data_list = [
+            PointData(np.asarray((0, 0)), np.asarray((1, 1)), np.asarray((2, 2))),
+            PointData(np.asarray((1, 1)), np.asarray((2, 2)), np.asarray((0, 3))),
+            PointData(np.asarray((2, 2)), np.asarray((0, 3)), np.asarray((0, 0))),
+            PointData(np.asarray((0, 3)), np.asarray((0, 0)), np.asarray((1, 1))),
+        ]
+
+        actual = remove_insignificant(point_list, data_list, 0.1)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)
+
+    def test_remove_insignificant_removal_order(self):
+        import numpy as np
+        from analyze import PointData, remove_insignificant
+
+        point_list = [
+            np.asarray((0, 0)),
+            np.asarray((0.5858, 1.414)),  # removed first
+            np.asarray((2, 2)),           # not removed as over tolerance after first removal
+            np.asarray((3.414, 1.414)),   # not this it second to be removed
+            np.asarray((4, 0)),           # no longer any points under tolerance
+            np.asarray((0, 0)),
+            np.asarray((0.5858, 1.414)),
+        ]
+        data_list = [
+            PointData(np.asarray((0, 0)), np.asarray((0.5858, 1.414)), np.asarray((2, 2))),
+            PointData(np.asarray((0.5858, 1.414)), np.asarray((2, 2)), np.asarray((3.414, 1.414))),
+            PointData(np.asarray((2, 2)), np.asarray((3.414, 1.414)), np.asarray((4, 0))),
+            PointData(np.asarray((3.414, 1.414)), np.asarray((4, 0)), np.asarray((0, 0))),
+            PointData(np.asarray((4, 0)), np.asarray((0, 0)), np.asarray((0.5858, 1.414))),
+        ]
+
+        actual = remove_insignificant(point_list, data_list, 0.6)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)
+
+    def test_remove_insignificant_origin_removal(self):
+        import numpy as np
+        from analyze import PointData, remove_insignificant
+
+        point_list = [
+            np.asarray((0.5858, 1.414)),
+            np.asarray((2, 2)),
+            np.asarray((3.414, 1.414)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((0.5858, 1.414)),
+            np.asarray((2, 2)),
+        ]
+        data_list = [
+            PointData(np.asarray((0.5858, 1.414)), np.asarray((2, 2)), np.asarray((3.414, 1.414))),
+            PointData(np.asarray((2, 2)), np.asarray((3.414, 1.414)), np.asarray((4, 0))),
+            PointData(np.asarray((3.414, 1.414)), np.asarray((4, 0)), np.asarray((0, 0))),
+            PointData(np.asarray((4, 0)), np.asarray((0, 0)), np.asarray((0.5858, 1.414))),
+            PointData(np.asarray((0, 0)), np.asarray((0.5858, 1.414)), np.asarray((2, 2))),
+        ]
+
+        actual = remove_insignificant(point_list, data_list, 0.6)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)

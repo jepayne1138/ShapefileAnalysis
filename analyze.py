@@ -6,6 +6,27 @@ import numpy as np
 import shapefile
 
 
+class PointData:
+
+    def __init__(self, left, point, right):
+        self.left = left
+        self.point = point
+        self.right = right
+        self.between = between_neighbors(left, point, right)
+        self.offset = midpoint_projection_offset(left, point, right)
+
+    def __eq__(self, other):
+        if isinstance(self, other.__class__):
+            return all([
+                np.array_equal(self.left, other.left),
+                np.array_equal(self.point, other.point),
+                np.array_equal(self.right, other.right),
+                (self.between == other.between),
+                isclose(self.offset, other.offset),
+            ])
+        return NotImplemented
+
+
 def less_or_close(a, b, *args, **kwargs):
     # Use isclose for handling effective equivalence
     return a < b or isclose(a, b, *args, **kwargs)
@@ -93,13 +114,38 @@ def parse_arguments(args):
     return parser.parse_args(sys.argv[1:])
 
 
-def point_data_list(point_seq, tolerance):
+def point_data_list(point_seq):
     for i in range(1, len(point_seq) - 1):
         p1, p2, p3 = neighbor_window(point_seq, i)
-        yield {
-            'id': i - 1,
-            'sig': not points_inline(p1, p2, p3, tolerance),
-        }
+        yield PointData(p1, p2, p3)
+
+
+def remove_insignificant(point_seq, data_seq, tolerance):
+    sig_points = [x for x in point_seq]
+    while True:
+        rem_values = [x.offset for x in data_seq if x.between and less_or_close(x.offset, tolerance)]
+        if rem_values:
+            next_rmv = min(rem_values)
+            for index, data in enumerate(data_seq):
+                if data.between and isclose(data.offset, next_rmv):
+                    break
+            # Remove then recalculate neighbors
+            del sig_points[index + 1]
+            del data_seq[index]
+            if index == 0:
+                # Replace last point with new following point
+                sig_points[-1] = sig_points[1]
+            if index == len(data_seq):
+                sig_points[0] = sig_points[index]
+            if index > 0:
+                data_seq[index - 1] = PointData(*neighbor_window(sig_points, index))
+            if index < len(data_seq):
+                data_seq[index] = PointData(*neighbor_window(sig_points, index + 1))
+            if index == len(data_seq):
+                data_seq[index - 1] = PointData(*neighbor_window(sig_points, index))
+        else:
+            break
+    return sig_points
 
 
 def main():
