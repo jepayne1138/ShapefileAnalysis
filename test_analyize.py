@@ -308,6 +308,59 @@ class TestMidpointProjectionOffset(unittest.TestCase):
         self.assertAlmostEqual(expected, actual)
 
 
+class TestBetweenNeighbors(unittest.TestCase):
+
+    def test_between_neighbors_out_of_segment_positive(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((1, 1))
+        b = np.asarray((2, 2.1))
+        c = np.asarray((2, 2))
+        actual = between_neighbors(a, b, c)
+        self.assertFalse(actual)
+
+    def test_between_neighbors_but_out_of_segment_reversed(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((2, 2.1))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertFalse(actual)
+
+    def test_between_neighbors_in_segment(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((1, 2))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertTrue(actual)
+
+    def test_between_neighbors_on_start(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((1, 1))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertTrue(actual)
+
+    def test_between_neighbors_on_end(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((2, 2))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertTrue(actual)
+
+
 class TestWithinTolerance(unittest.TestCase):
 
     def test_within_tolerance(self):

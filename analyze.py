@@ -57,6 +57,17 @@ def midpoint_projection_offset(pnt1, pnt2, pnt3):
     return abs(np.cross(outer_vec, pnt1 - pnt2) / norm_outer)
 
 
+def between_neighbors(pnt1, pnt2, pnt3):
+    """Midpoint projected onto neighboring points line is contained in segment"""
+    # Make sure the projection of the midpoint lies between the outer points
+    outer_vec = pnt3 - pnt1
+    norm_outer = np.linalg.norm(outer_vec)
+    scalar_proj = np.dot(pnt2 - pnt1, outer_vec / norm_outer)
+    return (
+        less_or_close(0, scalar_proj) and less_or_close(scalar_proj, norm_outer)
+    )
+
+
 def points_inline(pnt1, pnt2, pnt3, tolerance, float_tol=1e-9):
     """Check if the middle point lies on the line between 1 and 2 withing tolerance"""
     outer_vec = pnt3 - pnt1
