@@ -283,6 +283,31 @@ class TestPointsInline(unittest.TestCase):
         self.assertTrue(actual)
 
 
+class TestMidpointProjectionOffset(unittest.TestCase):
+
+    def test_midpoint_projection_offset_1(self):
+        import numpy as np
+        from analyze import midpoint_projection_offset
+
+        a = np.asarray((0, 0))
+        b = np.asarray((1, 1))
+        c = np.asarray((0, 2))
+        actual = midpoint_projection_offset(a, b, c)
+        expected = 1
+        self.assertAlmostEqual(expected, actual)
+
+    def test_midpoint_projection_offset_2(self):
+        import numpy as np
+        from analyze import midpoint_projection_offset
+
+        a = np.asarray((0, 0))
+        b = np.asarray((1, 2))
+        c = np.asarray((2, 0))
+        actual = midpoint_projection_offset(a, b, c)
+        expected = 2
+        self.assertAlmostEqual(expected, actual)
+
+
 class TestWithinTolerance(unittest.TestCase):
 
     def test_within_tolerance(self):

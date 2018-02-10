@@ -51,6 +51,12 @@ def within_tolerance(value, within, float_tol=1e-9):
     return less_or_close(abs_value, within, rel_tol=float_tol)
 
 
+def midpoint_projection_offset(pnt1, pnt2, pnt3):
+    outer_vec = pnt3 - pnt1
+    norm_outer = np.linalg.norm(outer_vec)
+    return abs(np.cross(outer_vec, pnt1 - pnt2) / norm_outer)
+
+
 def points_inline(pnt1, pnt2, pnt3, tolerance, float_tol=1e-9):
     """Check if the middle point lies on the line between 1 and 2 withing tolerance"""
     outer_vec = pnt3 - pnt1
