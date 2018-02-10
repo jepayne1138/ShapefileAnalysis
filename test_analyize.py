@@ -2,6 +2,26 @@ import unittest
 import types
 
 
+class TestLessOrClose(unittest.TestCase):
+
+    def test_less_or_close_simple(self):
+        from analyze import less_or_close
+        self.assertTrue(less_or_close(0, 1))
+
+    def test_less_or_close_greater(self):
+        from analyze import less_or_close
+        self.assertFalse(less_or_close(1, 0))
+
+    def test_less_or_close_strict_equal(self):
+        from analyze import less_or_close
+        self.assertTrue(less_or_close(1, 1))
+
+    def test_less_or_close_strict_float_close(self):
+        from analyze import less_or_close
+        # 1.01 - 1 = 0.010000000000000009
+        self.assertTrue(less_or_close(1.01 - 1, 0.01))
+
+
 class TestPointWindowIter(unittest.TestCase):
 
     def test_point_window_iter(self):

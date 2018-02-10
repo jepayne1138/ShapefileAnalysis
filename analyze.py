@@ -6,6 +6,10 @@ import numpy as np
 import shapefile
 
 
+def less_or_close(a, b, *args, **kwargs):
+    return a < b or isclose(a, b, *args, **kwargs)
+
+
 def neighbor_window(seq, index):
     if len(seq) < 3:
         raise ValueError("seq must have at least 3 elements to have neighbors")
