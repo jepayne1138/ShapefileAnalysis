@@ -19,6 +19,14 @@ def neighbor_window(seq, index):
     return seq[index - 1:index + 2]
 
 
+def modified_point_list(seq):
+    if len(seq) < 3:
+        raise ValueError("seq must have at least 3 elements to have neighbors")
+    if seq[0] != seq[-1]:
+        raise ValueError("First and last element must match")
+    return seq + (seq[1],)
+
+
 def point_window_iter(seq):
     # Iterates over groups of three points, where the input seq
     # has first and last the same, then add a final group with the

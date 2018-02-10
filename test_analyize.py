@@ -22,6 +22,25 @@ class TestLessOrClose(unittest.TestCase):
         self.assertTrue(less_or_close(1.01 - 1, 0.01))
 
 
+class TestModifiedPointList(unittest.TestCase):
+
+    def test_modified_point_list_too_small(self):
+        from analyze import modified_point_list
+        with self.assertRaises(ValueError):
+            modified_point_list((1, 2))
+
+    def test_modified_point_list_verify_start_and_end_same(self):
+        from analyze import modified_point_list
+        with self.assertRaises(ValueError):
+            modified_point_list((0, 1, 2))
+
+    def test_modified_point_list_verify_second_element_wrapped(self):
+        from analyze import modified_point_list
+        actual = modified_point_list((0, 1, 2, 3, 0))
+        expected = (0, 1, 2, 3, 0, 1)
+        self.assertEqual(expected, actual)
+
+
 class TestPointWindowIter(unittest.TestCase):
 
     def test_point_window_iter(self):
