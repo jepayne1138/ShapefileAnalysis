@@ -46,7 +46,7 @@ def modified_point_list(seq):
     if seq[0] != seq[-1]:
         raise ValueError("First and last element must match")
     return_seq = []
-    for pnt in seq + (seq[1],):
+    for pnt in tuple(seq) + (seq[1],):
         try:
             if len(pnt) == 2:
                 return_seq.append(np.asarray(pnt))
@@ -120,8 +120,9 @@ def point_data_list(point_seq):
         yield PointData(p1, p2, p3)
 
 
-def remove_insignificant(point_seq, data_seq, tolerance):
-    sig_points = [x for x in point_seq]
+def remove_insignificant(point_iter, data_iter, tolerance):
+    data_seq = list(data_iter)
+    sig_points = list(point_iter)
     while True:
         rem_values = [x.offset for x in data_seq if x.between and less_or_close(x.offset, tolerance)]
         if rem_values:
@@ -146,6 +147,12 @@ def remove_insignificant(point_seq, data_seq, tolerance):
         else:
             break
     return sig_points
+
+
+def significant_points(points, tolerance):
+    point_seq = modified_point_list(points)
+    data_seq = point_data_list(point_seq)
+    return remove_insignificant(point_seq, data_seq, tolerance)
 
 
 def main():

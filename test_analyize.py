@@ -71,6 +71,25 @@ class TestModifiedPointList(unittest.TestCase):
         # so zip to longest and check all np.array_equals to assert accuracy
         assertArrayEquals(self, expected, actual)
 
+    def test_modified_point_list_input(self):
+        import numpy as np
+        from analyze import modified_point_list
+        actual = modified_point_list(
+            [(0, 0), (0, 1), (0, 2), (0, 3), (0, 0)]
+        )
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+            np.asarray((0, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+        ]
+
+        # NumPy has no implicit array equality,
+        # so zip to longest and check all np.array_equals to assert accuracy
+        assertArrayEquals(self, expected, actual)
+
 
 class TestPointWindowIter(unittest.TestCase):
 
@@ -571,6 +590,33 @@ class TestRemoveInsignificant(unittest.TestCase):
         ]
 
         actual = remove_insignificant(point_list, data_list, 0.6)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)
+
+
+class TestSignificantPoints(unittest.TestCase):
+
+    def test_significant_points(self):
+        import numpy as np
+        from analyze import significant_points
+
+        input_points = [
+            (0.5858, 1.414),
+            (2, 2),
+            (3.414, 1.414),
+            (4, 0),
+            (0, 0),
+            (0.5858, 1.414),
+        ]
+        tolerance = 0.6
+
+        actual = significant_points(input_points, tolerance)
         expected = [
             np.asarray((0, 0)),
             np.asarray((2, 2)),
