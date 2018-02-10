@@ -24,7 +24,15 @@ def modified_point_list(seq):
         raise ValueError("seq must have at least 3 elements to have neighbors")
     if seq[0] != seq[-1]:
         raise ValueError("First and last element must match")
-    return seq + (seq[1],)
+    return_seq = []
+    for pnt in seq + (seq[1],):
+        try:
+            if len(pnt) == 2:
+                return_seq.append(np.asarray(pnt))
+                continue
+        except TypeError:
+            raise ValueError("each element in seq must have len(2)")
+    return return_seq
 
 
 def point_window_iter(seq):

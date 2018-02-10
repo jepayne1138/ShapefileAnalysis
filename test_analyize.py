@@ -34,11 +34,36 @@ class TestModifiedPointList(unittest.TestCase):
         with self.assertRaises(ValueError):
             modified_point_list((0, 1, 2))
 
-    def test_modified_point_list_verify_second_element_wrapped(self):
+    def test_modified_point_list_verify_each_element_len2(self):
         from analyze import modified_point_list
-        actual = modified_point_list((0, 1, 2, 3, 0))
-        expected = (0, 1, 2, 3, 0, 1)
-        self.assertEqual(expected, actual)
+        with self.assertRaises(ValueError):
+            modified_point_list(((0, 0), (0, 1), (0, 2), 0))
+
+    def test_modified_point_list_verify_second_element_wrapped(self):
+        import numpy as np
+        from analyze import modified_point_list
+        actual = modified_point_list(
+            ((0, 0), (0, 1), (0, 2), (0, 3), (0, 0))
+        )
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+            np.asarray((0, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+        ]
+
+        # NumPy has no implicit array equality,
+        # so zip to longest and check all np.array_equals to assert accuracy
+        from itertools import zip_longest
+        self.assertTrue(
+            all([
+                np.array_equal(e, a)
+                for e, a
+                in zip_longest(expected, actual)
+            ])
+        )
 
 
 class TestPointWindowIter(unittest.TestCase):
