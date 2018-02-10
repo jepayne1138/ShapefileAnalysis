@@ -1,5 +1,4 @@
 import argparse
-from itertools import islice
 from math import isclose
 import sys
 
@@ -15,26 +14,13 @@ def neighbor_window(seq, index):
     return seq[index - 1:index + 2]
 
 
-def window(seq, n):
-    it = iter(seq)
-    result = tuple(islice(it, n))
-    if len(result) == n:
-        yield result
-    for elem in it:
-        result = result[1:] + (elem,)
-        yield result
-
-
 def point_window_iter(seq):
     # Iterates over groups of three points, where the input seq
     # has first and last the same, then add a final group with the
     # first/last element in the middle
-    first = None
-    for i, item in enumerate(window(seq, 3)):
-        if i == 0:
-            first = item
-        yield item
-    yield item[1:] + (first[1],)
+    elem_wrapped_seq = seq + (seq[1],)
+    for i in range(1, len(elem_wrapped_seq) - 1):
+        yield neighbor_window(elem_wrapped_seq, i)
 
 
 def within_tolerance(value, within, float_tol=1e-9):
