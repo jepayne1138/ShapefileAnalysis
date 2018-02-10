@@ -55,10 +55,10 @@ def points_inline(pnt1, pnt2, pnt3, tolerance, float_tol=1e-9):
     """Check if the middle point lies on the line between 1 and 2 withing tolerance"""
     outer_vec = pnt3 - pnt1
     norm_outer = np.linalg.norm(outer_vec)
-    min_offset = np.cross(outer_vec, pnt1 - pnt2) / norm_outer
+    mid_offset = np.cross(outer_vec, pnt1 - pnt2) / norm_outer
 
     # First check point is inline within tolerence
-    is_inline = within_tolerance(min_offset, tolerance, float_tol)
+    is_inline = within_tolerance(mid_offset, tolerance, float_tol)
 
     # Make sure the projection of the midpoint lies between the outer points
 
