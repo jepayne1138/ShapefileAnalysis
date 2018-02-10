@@ -1,8 +1,6 @@
 import unittest
 import types
 
-import pytest
-
 
 class TestAnalyize(unittest.TestCase):
 
@@ -11,6 +9,51 @@ class TestAnalyize(unittest.TestCase):
 
     def tearDown(self):
         pass
+
+    def test_neighbor_window_index_1(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 1)
+        expected = (0, 1, 2)
+        self.assertEqual(expected, actual)
+
+    def test_neighbor_window_index_2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 2)
+        expected = (1, 2, 3)
+        self.assertEqual(expected, actual)
+
+    def test_neighbor_window_index_3(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 3)
+        expected = (2, 3, 4)
+        self.assertEqual(expected, actual)
+
+    def test_neighbor_window_index_start_out_of_range(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        with self.assertRaises(IndexError):
+            neighbor_window(test_seq, 0)
+
+    def test_neighbor_window_index_end_out_of_range(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        with self.assertRaises(IndexError):
+            neighbor_window(test_seq, 4)
+
+    def test_neighbor_window_not_enough_elements(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1)
+        with self.assertRaises(ValueError):
+            neighbor_window(test_seq, 1)
 
     def test_window_size2(self):
         from analyze import window

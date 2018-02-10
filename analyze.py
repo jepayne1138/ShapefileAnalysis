@@ -7,6 +7,14 @@ import numpy as np
 import shapefile
 
 
+def neighbor_window(seq, index):
+    if len(seq) < 3:
+        raise ValueError("seq must have at least 3 elements to have neighbors")
+    if index < 1 or index > (len(seq) - 2):
+        raise IndexError("Index must fall between 1 and len(seq) - 2 to have neighbors")
+    return seq[index - 1:index + 2]
+
+
 def window(seq, n):
     it = iter(seq)
     result = tuple(islice(it, n))
