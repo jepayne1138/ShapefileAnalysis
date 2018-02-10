@@ -2,13 +2,19 @@ import unittest
 import types
 
 
-class TestAnalyize(unittest.TestCase):
+class TestPointWindowIter(unittest.TestCase):
 
-    def setUp(self):
-        pass
+    def test_point_window_iter(self):
+        from analyze import point_window_iter
 
-    def tearDown(self):
-        pass
+        test_iter = (0, 1, 2, 3, 0)
+        actual = point_window_iter(test_iter)
+        expected = [(0, 1, 2), (1, 2, 3), (2, 3, 0), (3, 0, 1)]
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
+
+
+class TestNeighborWindow(unittest.TestCase):
 
     def test_neighbor_window_index_1(self):
         from analyze import neighbor_window
@@ -54,15 +60,6 @@ class TestAnalyize(unittest.TestCase):
         test_seq = (0, 1)
         with self.assertRaises(ValueError):
             neighbor_window(test_seq, 1)
-
-    def test_point_window_iter(self):
-        from analyze import point_window_iter
-
-        test_iter = (0, 1, 2, 3, 0)
-        actual = point_window_iter(test_iter)
-        expected = [(0, 1, 2), (1, 2, 3), (2, 3, 0), (3, 0, 1)]
-        self.assertIsInstance(actual, types.GeneratorType)
-        self.assertEqual(expected, list(actual))
 
 
 class TestPointsInline(unittest.TestCase):
