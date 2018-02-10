@@ -70,19 +70,14 @@ def between_neighbors(pnt1, pnt2, pnt3):
 
 def points_inline(pnt1, pnt2, pnt3, tolerance, float_tol=1e-9):
     """Check if the middle point lies on the line between 1 and 2 withing tolerance"""
-    outer_vec = pnt3 - pnt1
-    norm_outer = np.linalg.norm(outer_vec)
-    mid_offset = np.cross(outer_vec, pnt1 - pnt2) / norm_outer
+    mid_offset = midpoint_projection_offset(pnt1, pnt2, pnt3)
 
     # First check point is inline within tolerence
     is_inline = within_tolerance(mid_offset, tolerance, float_tol)
 
     # Make sure the projection of the midpoint lies between the outer points
+    is_between = between_neighbors(pnt1, pnt2, pnt3)
 
-    scalar_proj = np.dot(pnt2 - pnt1, outer_vec / norm_outer)
-    is_between = (
-        less_or_close(0, scalar_proj) and less_or_close(scalar_proj, norm_outer)
-    )
     return is_inline and is_between
 
 
