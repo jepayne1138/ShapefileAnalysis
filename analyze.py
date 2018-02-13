@@ -108,6 +108,11 @@ def get_radians(pnt1, pnt2, pnt3):
     return np.arccos(np.dot(v1, v2) / (np.linalg.norm(v1) * np.linalg.norm(v2)))
 
 
+def orthogonal(pnt1, pnt2, pnt3, tolerance):
+    rad = get_radians(pnt1, pnt2, pnt3)
+    return within_tolerance(rad - (np.pi / 2), tolerance)
+
+
 def parse_arguments(args):
     parser = argparse.ArgumentParser(description='Analyzes a tax parcel shapefile')
     parser.add_argument('shapefile', type=str, help='Path to the .shp file')

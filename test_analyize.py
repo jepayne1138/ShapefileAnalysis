@@ -625,3 +625,56 @@ class TestSignificantPoints(unittest.TestCase):
             np.asarray((2, 2)),
         ]
         assertArrayEquals(self, expected, actual)
+
+
+class TestOrthogonal(unittest.TestCase):
+
+    def test_orthogonal_equal(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 0))
+        p2 = np.asarray((0, 1))
+        p3 = np.asarray((1, 1))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertTrue(actual)
+
+    def test_orthogonal_equal_reverse(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((1, 1))
+        p2 = np.asarray((0, 1))
+        p3 = np.asarray((0, 0))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertTrue(actual)
+
+    def test_orthogonal_outside_tolerance(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((0, 0))
+        p3 = np.asarray((1, 0.045))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertFalse(actual)
+
+    def test_orthogonal_within_tolerance1(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((0, 0))
+        p3 = np.asarray((1, 0.045))
+        actual = orthogonal(p1, p2, p3, 0.05)
+        self.assertTrue(actual)
+
+    def test_orthogonal_within_tolerance2(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((0, 0))
+        p3 = np.asarray((1, 0.04))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertTrue(actual)
