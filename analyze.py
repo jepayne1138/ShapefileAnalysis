@@ -32,12 +32,12 @@ def less_or_close(a, b, *args, **kwargs):
     return a < b or isclose(a, b, *args, **kwargs)
 
 
-def neighbor_window(seq, index):
-    if len(seq) < 3:
+def neighbor_window(seq, index, count=1):
+    if len(seq) < (count + 2):
         raise ValueError("seq must have at least 3 elements to have neighbors")
-    if index < 1 or index > (len(seq) - 2):
+    if index < 1 or index > (len(seq) - (count + 1)):
         raise IndexError("Index must fall between 1 and len(seq) - 2 to have neighbors")
-    return seq[index - 1:index + 2]
+    return seq[index - 1:index + count + 1]
 
 
 def modified_point_list(seq):

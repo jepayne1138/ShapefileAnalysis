@@ -143,12 +143,34 @@ class TestNeighborWindow(unittest.TestCase):
         with self.assertRaises(IndexError):
             neighbor_window(test_seq, 4)
 
+    def test_neighbor_window_index_end_out_of_range_count2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        with self.assertRaises(IndexError):
+            neighbor_window(test_seq, 3, count=2)
+
     def test_neighbor_window_not_enough_elements(self):
         from analyze import neighbor_window
 
         test_seq = (0, 1)
         with self.assertRaises(ValueError):
             neighbor_window(test_seq, 1)
+
+    def test_neighbor_window_not_enough_elements_count2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 3)
+        with self.assertRaises(ValueError):
+            neighbor_window(test_seq, 1, count=2)
+
+    def test_neighbor_window_count2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 1, count=2)
+        expected = (0, 1, 2, 3)
+        self.assertEqual(expected, actual)
 
 
 class TestPointsInline(unittest.TestCase):
