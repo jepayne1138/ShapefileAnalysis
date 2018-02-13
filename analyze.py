@@ -113,6 +113,12 @@ def orthogonal(pnt1, pnt2, pnt3, tolerance):
     return within_tolerance(rad - (np.pi / 2), tolerance)
 
 
+def same_side(pnt1, line_start, line_end, pnt2):
+    to_base = get_radians(pnt1, line_start, line_end)
+    to_pnt2 = get_radians(pnt1, line_start, pnt2)
+    return to_base > to_pnt2
+
+
 def parse_arguments(args):
     parser = argparse.ArgumentParser(description='Analyzes a tax parcel shapefile')
     parser.add_argument('shapefile', type=str, help='Path to the .shp file')

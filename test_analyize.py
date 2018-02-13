@@ -678,3 +678,42 @@ class TestOrthogonal(unittest.TestCase):
         p3 = np.asarray((1, 0.04))
         actual = orthogonal(p1, p2, p3, 0.04)
         self.assertTrue(actual)
+
+
+class TestSameSide(unittest.TestCase):
+
+    def test_same_side_right(self):
+        import numpy as np
+        from analyze import same_side
+
+        start = np.asarray((0, 0))
+        end = np.asarray((1, 1))
+        p1 = np.asarray((1, 0))
+        p2 = np.asarray((2, 1))
+
+        actual = same_side(p1, start, end, p2)
+        self.assertTrue(actual)
+
+    def test_same_side_left(self):
+        import numpy as np
+        from analyze import same_side
+
+        start = np.asarray((0, 0))
+        end = np.asarray((1, 1))
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((1, 2))
+
+        actual = same_side(p1, start, end, p2)
+        self.assertTrue(actual)
+
+    def test_same_side_different_sides(self):
+        import numpy as np
+        from analyze import same_side
+
+        start = np.asarray((0, 0))
+        end = np.asarray((1, 1))
+        p1 = np.asarray((1, 0))
+        p2 = np.asarray((1, 2))
+
+        actual = same_side(p1, start, end, p2)
+        self.assertFalse(actual)
