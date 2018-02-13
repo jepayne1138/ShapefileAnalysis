@@ -739,3 +739,103 @@ class TestSameSide(unittest.TestCase):
 
         actual = same_side(p1, start, end, p2)
         self.assertFalse(actual)
+
+
+class TestHasBox(unittest.TestCase):
+
+    def test_has_box_non_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0.5858, 1.414),
+            (2, 2),
+            (3.414, 1.414),
+            (4, 0),
+            (0, 0),
+            (0.5858, 1.414),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertFalse(actual)
+
+    def test_has_box_two_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (0, 2),
+            (1, 2),
+            (2, 1),
+            (2, 0),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)
+
+    def test_has_box_one_right_angle_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertFalse(actual)
+
+    def test_has_box_multiple_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)
+
+    def test_has_box_semicircle_single(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)
+
+    def test_has_box_parallelogram(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)

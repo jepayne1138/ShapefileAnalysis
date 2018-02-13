@@ -166,6 +166,23 @@ def significant_points(points, tolerance):
     return remove_insignificant(point_seq, data_seq, tolerance)
 
 
+def has_box(points, tolerance, angle_tolerance):
+    sig_points = significant_points(points, tolerance)
+
+    # Under 5 and the box is not possible
+    if len(sig_points) < 5:
+        return False
+
+    for i in range(1, len(sig_points) - 2):
+        p1, p2, p3, p4 = neighbor_window(sig_points, i, count=2)
+
+        if (orthogonal(p1, p2, p3, angle_tolerance) and
+                orthogonal(p2, p3, p4, angle_tolerance) and
+                same_side(p1, p2, p3, p4)):
+            return True
+    return False
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 
