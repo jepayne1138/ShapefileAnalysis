@@ -839,3 +839,39 @@ class TestHasBox(unittest.TestCase):
 
         actual = has_box(input_points, tolerance, angle_tolerance)
         self.assertTrue(actual)
+
+
+class TestDistance(unittest.TestCase):
+
+    def test_distance1(self):
+        import numpy as np
+        from analyze import distance
+
+        p1 = np.asarray((0, 0))
+        p2 = np.asarray((0, 1))
+
+        actual = distance(p1, p2)
+        expected = 1
+        self.assertAlmostEqual(expected, actual)
+
+    def test_distance2(self):
+        import numpy as np
+        from analyze import distance
+
+        p1 = np.asarray((0, 0))
+        p2 = np.asarray((0, 2))
+
+        actual = distance(p1, p2)
+        expected = 2
+        self.assertAlmostEqual(expected, actual)
+
+    def test_distance3(self):
+        import numpy as np
+        from analyze import distance
+
+        p1 = np.asarray((0, 0))
+        p2 = np.asarray((1, 1.7320508076))
+
+        actual = distance(p1, p2)
+        expected = 2
+        self.assertAlmostEqual(expected, actual)

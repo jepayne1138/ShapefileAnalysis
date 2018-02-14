@@ -183,6 +183,10 @@ def has_box(points, tolerance, angle_tolerance):
     return False
 
 
+def distance(pnt1, pnt2):
+    return np.linalg.norm(pnt2 - pnt1)
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 
