@@ -190,6 +190,14 @@ def distance(pnt1, pnt2):
     return np.linalg.norm(pnt2 - pnt1)
 
 
+def centroid(points):
+    arr = np.asarray(points)
+    length = arr.shape[0]
+    sum_x = np.sum(arr[:, 0])
+    sum_y = np.sum(arr[:, 1])
+    return np.asarray((sum_x / length, sum_y / length))
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 

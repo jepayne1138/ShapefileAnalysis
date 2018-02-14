@@ -949,3 +949,33 @@ class TestDistance(unittest.TestCase):
         actual = distance(p1, p2)
         expected = 2
         self.assertAlmostEqual(expected, actual)
+
+
+class TestCentroid(unittest.TestCase):
+
+    def test_centroid_square(self):
+        import numpy as np
+        from analyze import centroid
+
+        points = np.asarray([
+            np.asarray((0, 0)),
+            np.asarray((0, 2)),
+            np.asarray((2, 2)),
+            np.asarray((2, 0)),
+        ])
+        actual = centroid(points)
+        expected = np.asarray((1, 1))
+        self.assertTrue(np.allclose(expected, actual))
+
+    def test_centroid_triangle(self):
+        import numpy as np
+        from analyze import centroid
+
+        points = np.asarray([
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((4, 0)),
+        ])
+        actual = centroid(points)
+        expected = np.asarray((2, 2 / 3))
+        self.assertTrue(np.allclose(expected, actual))
