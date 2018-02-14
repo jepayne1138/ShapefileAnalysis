@@ -765,10 +765,10 @@ class TestHasBox(unittest.TestCase):
 
         input_points = [
             (0, 0),
-            (0, 2),
-            (1, 2),
-            (2, 1),
-            (2, 0),
+            (0, 20),
+            (10, 20),
+            (20, 10),
+            (20, 0),
             (0, 0),
         ]
         tolerance = 0.6
@@ -777,13 +777,87 @@ class TestHasBox(unittest.TestCase):
         actual = has_box(input_points, tolerance, angle_tolerance)
         self.assertTrue(actual)
 
+    def test_has_box_two_found_both_out_of_size(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (0, 85),
+            (1, 85),
+            (2, 1),
+            (2, 0),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertFalse(actual)
+
+    def test_has_box_two_found_low_in_change_bounds(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (0, 40),
+            (5, 40),
+            (6, 20),
+            (6, 0),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+        low = 5
+        high = 30
+
+        actual = has_box(input_points, tolerance, angle_tolerance, low, high)
+        self.assertTrue(actual)
+
+    def test_has_box_two_found_high_in_change_bounds(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (0, 90),
+            (5, 90),
+            (6, 20),
+            (6, 0),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+        low = 10
+        high = 100
+
+        actual = has_box(input_points, tolerance, angle_tolerance, low, high)
+        self.assertTrue(actual)
+
+    def test_has_box_two_found_both_out_change_bounds(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (0, 40),
+            (20, 40),
+            (30, 20),
+            (30, 0),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+        low = 32
+        high = 38
+
+        actual = has_box(input_points, tolerance, angle_tolerance, low, high)
+        self.assertFalse(actual)
+
     def test_has_box_one_right_angle_found(self):
         from analyze import has_box
 
         input_points = [
             (0, 0),
-            (1, 0),
-            (0, 1),
+            (15, 0),
+            (0, 15),
             (0, 0),
         ]
         tolerance = 0.6
@@ -797,9 +871,9 @@ class TestHasBox(unittest.TestCase):
 
         input_points = [
             (0, 0),
-            (1, 0),
-            (1, 1),
-            (0, 1),
+            (15, 0),
+            (15, 15),
+            (0, 15),
             (0, 0),
         ]
         tolerance = 0.6
@@ -813,9 +887,9 @@ class TestHasBox(unittest.TestCase):
 
         input_points = [
             (0, 0),
-            (1, 0),
-            (1, 1),
-            (0, 1),
+            (15, 0),
+            (15, 15),
+            (0, 15),
             (0, 0),
         ]
         tolerance = 0.6
@@ -828,17 +902,17 @@ class TestHasBox(unittest.TestCase):
         from analyze import has_box
 
         input_points = [
-            (0, 0),
-            (1, 0),
-            (1, 1),
             (0, 1),
-            (0, 0),
+            (15, 0),
+            (30, 1),
+            (15, 2),
+            (0, 1),
         ]
         tolerance = 0.6
         angle_tolerance = 0.03
 
         actual = has_box(input_points, tolerance, angle_tolerance)
-        self.assertTrue(actual)
+        self.assertFalse(actual)
 
 
 class TestDistance(unittest.TestCase):

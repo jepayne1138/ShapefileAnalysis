@@ -166,7 +166,7 @@ def significant_points(points, tolerance):
     return remove_insignificant(point_seq, data_seq, tolerance)
 
 
-def has_box(points, tolerance, angle_tolerance):
+def has_box(points, tolerance, angle_tolerance, min_len=10, max_len=80):
     sig_points = significant_points(points, tolerance)
 
     # Under 5 and the box is not possible
@@ -176,9 +176,12 @@ def has_box(points, tolerance, angle_tolerance):
     for i in range(1, len(sig_points) - 2):
         p1, p2, p3, p4 = neighbor_window(sig_points, i, count=2)
 
+        mid_dist = distance(p2, p3)
         if (orthogonal(p1, p2, p3, angle_tolerance) and
                 orthogonal(p2, p3, p4, angle_tolerance) and
-                same_side(p1, p2, p3, p4)):
+                same_side(p1, p2, p3, p4) and
+                less_or_close(mid_dist, max_len) and
+                less_or_close(min_len, mid_dist)):
             return True
     return False
 
