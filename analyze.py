@@ -36,14 +36,14 @@ def neighbor_window(seq, index, count=1):
     if len(seq) < (count + 2):
         raise ValueError("seq must have at least 3 elements to have neighbors")
     if index < 1 or index > (len(seq) - (count + 1)):
-        raise IndexError("Index must fall between 1 and len(seq) - 2 to have neighbors")
+        raise IndexError(f"Index must fall between 1 and len(seq) - 2 to have neighbors: (index={index}, seq={seq})")
     return seq[index - 1:index + count + 1]
 
 
 def modified_point_list(seq):
     if len(seq) < 3:
         raise ValueError("seq must have at least 3 elements to have neighbors")
-    if seq[0] != seq[-1]:
+    if not np.array_equal(seq[0], seq[-1]):
         raise ValueError("First and last element must match")
     return_seq = []
     for pnt in tuple(seq) + (seq[1],):
@@ -192,6 +192,8 @@ def distance(pnt1, pnt2):
 
 def centroid(points):
     arr = np.asarray(points)
+    if np.array_equal(arr[0], arr[-1]):
+        arr = arr[:-1]
     length = arr.shape[0]
     sum_x = np.sum(arr[:, 0])
     sum_y = np.sum(arr[:, 1])
