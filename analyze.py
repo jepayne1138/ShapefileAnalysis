@@ -3,6 +3,7 @@ from math import isclose
 import sys
 
 import numpy as np
+import scipy.spatial
 import shapefile
 
 
@@ -198,6 +199,24 @@ def centroid(points):
     sum_x = np.sum(arr[:, 0])
     sum_y = np.sum(arr[:, 1])
     return np.asarray((sum_x / length, sum_y / length))
+
+
+def nearest_distances(points, num_nearest=1):
+    if num_nearest < 1:
+        ValueError("num_nearest must be at least 1")
+    if len(points) <= num_nearest:
+        ValueError("num_nearest cannot be larges than len(points) - 1")
+
+    arr = np.array(points)
+    tree = scipy.spatial.KDTree(arr)
+    res = tree.query(tree.data, num_nearest + 1)
+    # Return {
+    #   [p_x, p_y].tobytes() : [dist_first_nearest, dist_sec_nearest, ..., dist_nth_nearest]
+    # }  tobytes used as bytestring is hashable
+    return {
+        point.astype(np.float).tobytes(): dist[1:]
+        for point, dist in zip(tree.data, res[0])
+    }
 
 
 def split_list(original, split_indexes):

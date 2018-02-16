@@ -1074,3 +1074,58 @@ class TestSplitList(unittest.TestCase):
 
         self.assertIsInstance(actual, types.GeneratorType)
         self.assertEqual(expected, list(actual))
+
+
+class TestNearestDistances(unittest.TestCase):
+
+    def assertDictArrayValuesEqual(self, expected, actual):
+        import numpy as np
+        try:
+            if set(expected.keys()) == set(actual.keys()):
+                for x in expected.keys():
+                    if not np.allclose(expected[x], actual[x]):
+                        raise AssertionError(f'{expected[x]} != {actual[x]}')
+        except AttributeError:
+            raise AssertionError('dictionary keys do not match')
+
+    def test_nearest_distances_1_nearest(self):
+        import numpy as np
+        from analyze import nearest_distances
+
+        points = [
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+            np.asarray((3, 0)),
+            np.asarray((0, 2.5)),
+        ]
+
+        actual = nearest_distances(points, num_nearest=1)
+        expected = {
+            np.array((0, 0), dtype=np.float).tobytes(): np.array((1,), dtype=np.float),
+            np.array((0, 1), dtype=np.float).tobytes(): np.array((1,), dtype=np.float),
+            np.array((3, 0), dtype=np.float).tobytes(): np.array((3,), dtype=np.float),
+            np.array((0, 2.5), dtype=np.float).tobytes(): np.array((1.5,), dtype=np.float),
+        }
+
+        self.assertDictArrayValuesEqual(expected, actual)
+
+    def test_nearest_distances_2_nearest(self):
+        import numpy as np
+        from analyze import nearest_distances
+
+        points = [
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+            np.asarray((3, 0)),
+            np.asarray((0, 2.5)),
+        ]
+
+        actual = nearest_distances(points, num_nearest=2)
+        expected = {
+            np.array((0, 0), dtype=np.float).tobytes(): np.array((1, 2.5), dtype=np.float),
+            np.array((0, 1), dtype=np.float).tobytes(): np.array((1, 1.5), dtype=np.float),
+            np.array((3, 0), dtype=np.float).tobytes(): np.array((3, 3.16227766), dtype=np.float),
+            np.array((0, 2.5), dtype=np.float).tobytes(): np.array((1.5, 2.5), dtype=np.float),
+        }
+
+        self.assertDictArrayValuesEqual(expected, actual)

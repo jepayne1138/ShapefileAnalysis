@@ -3,6 +3,7 @@ from setuptools import setup
 requires = [
     'pyshp',
     'numpy',
+    'scipy',
 ]
 
 tests_require = [
