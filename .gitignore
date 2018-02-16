@@ -40,3 +40,4 @@ venv/
 tax_parcels/
 *.zip
 *.txt
+*.csv
