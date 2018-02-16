@@ -200,6 +200,17 @@ def centroid(points):
     return np.asarray((sum_x / length, sum_y / length))
 
 
+def split_list(original, split_indexes):
+    if not split_indexes:
+        split_indexes = [0]
+    if split_indexes[0] != 0:
+        split_indexes.insert(0, 0)
+    split_indexes.append(len(original))
+    for i in range(1, len(split_indexes)):
+        s, e = neighbor_window(split_indexes, i, 0)
+        yield original[s:e]
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 

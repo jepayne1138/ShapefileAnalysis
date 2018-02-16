@@ -994,3 +994,83 @@ class TestCentroid(unittest.TestCase):
         actual = centroid(points)
         expected = np.asarray((2, 2 / 3))
         self.assertTrue(np.allclose(expected, actual))
+
+
+class TestSplitList(unittest.TestCase):
+
+    def test_split_list_empty(self):
+        from analyze import split_list
+
+        original = []
+        split_indexes = []
+        actual = split_list(original, split_indexes)
+        expected = [[]]
+
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
+
+    def test_split_list_only_zero(self):
+        from analyze import split_list
+
+        original = [1, 2, 3]
+        split_indexes = [0]
+        actual = split_list(original, split_indexes)
+        expected = [[1, 2, 3]]
+
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
+
+    def test_split_list_only_empty(self):
+        from analyze import split_list
+
+        original = [1, 2, 3]
+        split_indexes = []
+        actual = split_list(original, split_indexes)
+        expected = [[1, 2, 3]]
+
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
+
+    def test_split_list_none(self):
+        from analyze import split_list
+
+        original = [1, 2, 3]
+        split_indexes = None
+        actual = split_list(original, split_indexes)
+        expected = [[1, 2, 3]]
+
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
+
+    def test_split_list_split1(self):
+        from analyze import split_list
+
+        original = [1, 2, 3, 4, 5]
+        split_indexes = [0, 2]
+        actual = split_list(original, split_indexes)
+        expected = [[1, 2], [3, 4, 5]]
+
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
+
+    def test_split_list_split2(self):
+        from analyze import split_list
+
+        original = [1, 2, 3, 4, 5]
+        split_indexes = [0, 2, 4]
+        actual = split_list(original, split_indexes)
+        expected = [[1, 2], [3, 4], [5]]
+
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
+
+    def test_split_list_split2_no_leading(self):
+        from analyze import split_list
+
+        original = [1, 2, 3, 4, 5]
+        split_indexes = [2, 4]
+        actual = split_list(original, split_indexes)
+        expected = [[1, 2], [3, 4], [5]]
+
+        self.assertIsInstance(actual, types.GeneratorType)
+        self.assertEqual(expected, list(actual))
