@@ -839,3 +839,75 @@ class TestHasBox(unittest.TestCase):
 
         actual = has_box(input_points, tolerance, angle_tolerance)
         self.assertTrue(actual)
+
+
+class TestGetPointIndexByValue(unittest.TestCase):
+
+    def test_get_point_index_by_value(self):
+        import numpy as np
+        from analyze import get_point_index_by_value
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+        ]
+        search_point = np.array((2, 1))
+        actual = get_point_index_by_value(points, search_point)
+
+        expected = 2
+        self.assertEqual(expected, actual)
+
+    def test_get_point_index_by_value_duplicate(self):
+        import numpy as np
+        from analyze import get_point_index_by_value
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((1, 2)),
+            np.array((0, 1)),
+        ]
+        search_point = np.array((1, 2))
+        actual = get_point_index_by_value(points, search_point)
+        expected = 1
+        self.assertEqual(expected, actual)
+
+
+class TestGetTopPoint(unittest.TestCase):
+
+    def test_get_top_point(self):
+        import numpy as np
+        from analyze import get_top_point
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+        ]
+        actual = get_top_point(points)
+
+        expected = np.array((1, 2))
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_get_top_point_two_equal_returns_right(self):
+        import numpy as np
+        from analyze import get_top_point
+
+        points = [
+            np.array((0, 0)),
+            np.array((0, 1)),
+            np.array((1, 1)),
+            np.array((1, 0)),
+            np.array((0, 0)),
+        ]
+        actual = get_top_point(points)
+
+        expected = np.array((1, 1))
+        self.assertTrue(np.array_equal(expected, actual))

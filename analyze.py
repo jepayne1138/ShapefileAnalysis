@@ -183,6 +183,18 @@ def has_box(points, tolerance, angle_tolerance):
     return False
 
 
+def get_point_index_by_value(points, search_point):
+    # https://stackoverflow.com/a/18927811
+    arr = np.array(points)
+    search_arr = np.array(search_point)
+    return np.where(np.all(arr == search_arr, axis=1))[0][0]
+
+
+def get_top_point(points):
+    arr = np.asarray(points)
+    return arr[np.lexsort((arr[:,0], arr[:,1]))][::-1][0]
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 
