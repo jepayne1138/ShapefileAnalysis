@@ -911,3 +911,91 @@ class TestGetTopPoint(unittest.TestCase):
 
         expected = np.array((1, 1))
         self.assertTrue(np.array_equal(expected, actual))
+
+
+class TestRemoveArrayWrap(unittest.TestCase):
+
+    def test_remove_array_wrap(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_remove_array_wrap_first(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_remove_array_wrap_first_2(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+            np.array((1, 2)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_remove_array_wrap_first_2(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+            np.array((1, 2)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))

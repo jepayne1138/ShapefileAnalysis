@@ -195,6 +195,17 @@ def get_top_point(points):
     return arr[np.lexsort((arr[:,0], arr[:,1]))][::-1][0]
 
 
+def remove_array_wrap(points):
+    arr_last_index = len(points) - 1
+    first_index = get_point_index_by_value(points, points[arr_last_index])
+    if first_index != arr_last_index:
+        arr_start = points[:first_index + 1]
+        arr_end = points[-(first_index + 1):]
+        if np.allclose(arr_start, arr_end):
+            return points[:-(first_index + 1)]
+    return points
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 
