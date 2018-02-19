@@ -1,43 +1,176 @@
 import unittest
 import types
 
-import pytest
+
+def assertArrayEquals(testcase, arr1, arr2):
+    """Helper to assert sequence numpy array equality"""
+    from itertools import zip_longest
+    import numpy as np
+    testcase.assertTrue(
+        all([
+            np.array_equal(e, a)
+            for e, a
+            in zip_longest(arr1, arr2)
+        ])
+    )
 
 
-class TestAnalyize(unittest.TestCase):
+class TestLessOrClose(unittest.TestCase):
 
-    def setUp(self):
-        pass
+    def test_less_or_close_simple(self):
+        from analyze import less_or_close
+        self.assertTrue(less_or_close(0, 1))
 
-    def tearDown(self):
-        pass
+    def test_less_or_close_greater(self):
+        from analyze import less_or_close
+        self.assertFalse(less_or_close(1, 0))
 
-    def test_window_size2(self):
-        from analyze import window
-        test_iter = iter((0, 1, 2, 3, 4))
+    def test_less_or_close_strict_equal(self):
+        from analyze import less_or_close
+        self.assertTrue(less_or_close(1, 1))
 
-        actual = window(test_iter, 2)
-        expected = [(0, 1), (1, 2), (2, 3), (3, 4)]
-        self.assertIsInstance(actual, types.GeneratorType)
-        self.assertEqual(expected, list(actual))
+    def test_less_or_close_strict_float_close(self):
+        from analyze import less_or_close
+        # 1.01 - 1 = 0.010000000000000009
+        self.assertTrue(less_or_close(1.01 - 1, 0.01))
 
-    def test_window_size3(self):
-        from analyze import window
-        test_iter = iter((0, 1, 2, 3, 4))
 
-        actual = window(test_iter, 3)
-        expected = [(0, 1, 2), (1, 2, 3), (2, 3, 4)]
-        self.assertIsInstance(actual, types.GeneratorType)
-        self.assertEqual(expected, list(actual))
+class TestModifiedPointList(unittest.TestCase):
+
+    def test_modified_point_list_too_small(self):
+        from analyze import modified_point_list
+        with self.assertRaises(ValueError):
+            modified_point_list((1, 2))
+
+    def test_modified_point_list_verify_start_and_end_same(self):
+        from analyze import modified_point_list
+        with self.assertRaises(ValueError):
+            modified_point_list((0, 1, 2))
+
+    def test_modified_point_list_verify_each_element_len2(self):
+        from analyze import modified_point_list
+        with self.assertRaises(ValueError):
+            modified_point_list(((0, 0), (0, 1), (0, 2), 0))
+
+    def test_modified_point_list_verify_second_element_wrapped(self):
+        import numpy as np
+        from analyze import modified_point_list
+        actual = modified_point_list(
+            ((0, 0), (0, 1), (0, 2), (0, 3), (0, 0))
+        )
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+            np.asarray((0, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+        ]
+
+        # NumPy has no implicit array equality,
+        # so zip to longest and check all np.array_equals to assert accuracy
+        assertArrayEquals(self, expected, actual)
+
+    def test_modified_point_list_input(self):
+        import numpy as np
+        from analyze import modified_point_list
+        actual = modified_point_list(
+            [(0, 0), (0, 1), (0, 2), (0, 3), (0, 0)]
+        )
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+            np.asarray((0, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((0, 1)),
+        ]
+
+        # NumPy has no implicit array equality,
+        # so zip to longest and check all np.array_equals to assert accuracy
+        assertArrayEquals(self, expected, actual)
+
+
+class TestPointWindowIter(unittest.TestCase):
 
     def test_point_window_iter(self):
         from analyze import point_window_iter
 
-        test_iter = iter((0, 1, 2, 3, 0))
+        test_iter = (0, 1, 2, 3, 0)
         actual = point_window_iter(test_iter)
         expected = [(0, 1, 2), (1, 2, 3), (2, 3, 0), (3, 0, 1)]
         self.assertIsInstance(actual, types.GeneratorType)
         self.assertEqual(expected, list(actual))
+
+
+class TestNeighborWindow(unittest.TestCase):
+
+    def test_neighbor_window_index_1(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 1)
+        expected = (0, 1, 2)
+        self.assertEqual(expected, actual)
+
+    def test_neighbor_window_index_2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 2)
+        expected = (1, 2, 3)
+        self.assertEqual(expected, actual)
+
+    def test_neighbor_window_index_3(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 3)
+        expected = (2, 3, 4)
+        self.assertEqual(expected, actual)
+
+    def test_neighbor_window_index_start_out_of_range(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        with self.assertRaises(IndexError):
+            neighbor_window(test_seq, 0)
+
+    def test_neighbor_window_index_end_out_of_range(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        with self.assertRaises(IndexError):
+            neighbor_window(test_seq, 4)
+
+    def test_neighbor_window_index_end_out_of_range_count2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        with self.assertRaises(IndexError):
+            neighbor_window(test_seq, 3, count=2)
+
+    def test_neighbor_window_not_enough_elements(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1)
+        with self.assertRaises(ValueError):
+            neighbor_window(test_seq, 1)
+
+    def test_neighbor_window_not_enough_elements_count2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 3)
+        with self.assertRaises(ValueError):
+            neighbor_window(test_seq, 1, count=2)
+
+    def test_neighbor_window_count2(self):
+        from analyze import neighbor_window
+
+        test_seq = (0, 1, 2, 3, 4)
+        actual = neighbor_window(test_seq, 1, count=2)
+        expected = (0, 1, 2, 3)
+        self.assertEqual(expected, actual)
 
 
 class TestPointsInline(unittest.TestCase):
@@ -197,6 +330,84 @@ class TestPointsInline(unittest.TestCase):
         self.assertTrue(actual)
 
 
+class TestMidpointProjectionOffset(unittest.TestCase):
+
+    def test_midpoint_projection_offset_1(self):
+        import numpy as np
+        from analyze import midpoint_projection_offset
+
+        a = np.asarray((0, 0))
+        b = np.asarray((1, 1))
+        c = np.asarray((0, 2))
+        actual = midpoint_projection_offset(a, b, c)
+        expected = 1
+        self.assertAlmostEqual(expected, actual)
+
+    def test_midpoint_projection_offset_2(self):
+        import numpy as np
+        from analyze import midpoint_projection_offset
+
+        a = np.asarray((0, 0))
+        b = np.asarray((1, 2))
+        c = np.asarray((2, 0))
+        actual = midpoint_projection_offset(a, b, c)
+        expected = 2
+        self.assertAlmostEqual(expected, actual)
+
+
+class TestBetweenNeighbors(unittest.TestCase):
+
+    def test_between_neighbors_out_of_segment_positive(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((1, 1))
+        b = np.asarray((2, 2.1))
+        c = np.asarray((2, 2))
+        actual = between_neighbors(a, b, c)
+        self.assertFalse(actual)
+
+    def test_between_neighbors_but_out_of_segment_reversed(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((2, 2.1))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertFalse(actual)
+
+    def test_between_neighbors_in_segment(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((1, 2))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertTrue(actual)
+
+    def test_between_neighbors_on_start(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((1, 1))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertTrue(actual)
+
+    def test_between_neighbors_on_end(self):
+        import numpy as np
+        from analyze import between_neighbors
+
+        a = np.asarray((2, 2))
+        b = np.asarray((2, 2))
+        c = np.asarray((1, 1))
+        actual = between_neighbors(a, b, c)
+        self.assertTrue(actual)
+
+
 class TestWithinTolerance(unittest.TestCase):
 
     def test_within_tolerance(self):
@@ -291,3 +502,340 @@ class TestGetRadians(unittest.TestCase):
         actual = get_radians(a, b, c)
         expected = np.pi / 2
         self.assertEqual(expected, actual)
+
+
+class TestPointDataList(unittest.TestCase):
+
+    def test_point_data_list(self):
+        import numpy as np
+        from analyze import PointData, point_data_list
+
+        valid_point_list = [
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+            np.asarray((2, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+        ]
+        actual = list(point_data_list(valid_point_list))
+        expected = [
+            PointData(np.asarray((0, 0)), np.asarray((1, 1)), np.asarray((2, 2))),
+            PointData(np.asarray((1, 1)), np.asarray((2, 2)), np.asarray((0, 3))),
+            PointData(np.asarray((2, 2)), np.asarray((0, 3)), np.asarray((0, 0))),
+            PointData(np.asarray((0, 3)), np.asarray((0, 0)), np.asarray((1, 1))),
+        ]
+        self.assertEqual(expected, actual)
+
+
+class TestRemoveInsignificant(unittest.TestCase):
+
+    def test_remove_insignificant(self):
+        import numpy as np
+        from analyze import PointData, remove_insignificant
+
+        point_list = [
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+            np.asarray((2, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((1, 1)),
+        ]
+        data_list = [
+            PointData(np.asarray((0, 0)), np.asarray((1, 1)), np.asarray((2, 2))),
+            PointData(np.asarray((1, 1)), np.asarray((2, 2)), np.asarray((0, 3))),
+            PointData(np.asarray((2, 2)), np.asarray((0, 3)), np.asarray((0, 0))),
+            PointData(np.asarray((0, 3)), np.asarray((0, 0)), np.asarray((1, 1))),
+        ]
+
+        actual = remove_insignificant(point_list, data_list, 0.1)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((0, 3)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)
+
+    def test_remove_insignificant_removal_order(self):
+        import numpy as np
+        from analyze import PointData, remove_insignificant
+
+        point_list = [
+            np.asarray((0, 0)),
+            np.asarray((0.5858, 1.414)),  # removed first
+            np.asarray((2, 2)),           # not removed as over tolerance after first removal
+            np.asarray((3.414, 1.414)),   # not this it second to be removed
+            np.asarray((4, 0)),           # no longer any points under tolerance
+            np.asarray((0, 0)),
+            np.asarray((0.5858, 1.414)),
+        ]
+        data_list = [
+            PointData(np.asarray((0, 0)), np.asarray((0.5858, 1.414)), np.asarray((2, 2))),
+            PointData(np.asarray((0.5858, 1.414)), np.asarray((2, 2)), np.asarray((3.414, 1.414))),
+            PointData(np.asarray((2, 2)), np.asarray((3.414, 1.414)), np.asarray((4, 0))),
+            PointData(np.asarray((3.414, 1.414)), np.asarray((4, 0)), np.asarray((0, 0))),
+            PointData(np.asarray((4, 0)), np.asarray((0, 0)), np.asarray((0.5858, 1.414))),
+        ]
+
+        actual = remove_insignificant(point_list, data_list, 0.6)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)
+
+    def test_remove_insignificant_origin_removal(self):
+        import numpy as np
+        from analyze import PointData, remove_insignificant
+
+        point_list = [
+            np.asarray((0.5858, 1.414)),
+            np.asarray((2, 2)),
+            np.asarray((3.414, 1.414)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((0.5858, 1.414)),
+            np.asarray((2, 2)),
+        ]
+        data_list = [
+            PointData(np.asarray((0.5858, 1.414)), np.asarray((2, 2)), np.asarray((3.414, 1.414))),
+            PointData(np.asarray((2, 2)), np.asarray((3.414, 1.414)), np.asarray((4, 0))),
+            PointData(np.asarray((3.414, 1.414)), np.asarray((4, 0)), np.asarray((0, 0))),
+            PointData(np.asarray((4, 0)), np.asarray((0, 0)), np.asarray((0.5858, 1.414))),
+            PointData(np.asarray((0, 0)), np.asarray((0.5858, 1.414)), np.asarray((2, 2))),
+        ]
+
+        actual = remove_insignificant(point_list, data_list, 0.6)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)
+
+
+class TestSignificantPoints(unittest.TestCase):
+
+    def test_significant_points(self):
+        import numpy as np
+        from analyze import significant_points
+
+        input_points = [
+            (0.5858, 1.414),
+            (2, 2),
+            (3.414, 1.414),
+            (4, 0),
+            (0, 0),
+            (0.5858, 1.414),
+        ]
+        tolerance = 0.6
+
+        actual = significant_points(input_points, tolerance)
+        expected = [
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+            np.asarray((4, 0)),
+            np.asarray((0, 0)),
+            np.asarray((2, 2)),
+        ]
+        assertArrayEquals(self, expected, actual)
+
+
+class TestOrthogonal(unittest.TestCase):
+
+    def test_orthogonal_equal(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 0))
+        p2 = np.asarray((0, 1))
+        p3 = np.asarray((1, 1))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertTrue(actual)
+
+    def test_orthogonal_equal_reverse(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((1, 1))
+        p2 = np.asarray((0, 1))
+        p3 = np.asarray((0, 0))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertTrue(actual)
+
+    def test_orthogonal_outside_tolerance(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((0, 0))
+        p3 = np.asarray((1, 0.045))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertFalse(actual)
+
+    def test_orthogonal_within_tolerance1(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((0, 0))
+        p3 = np.asarray((1, 0.045))
+        actual = orthogonal(p1, p2, p3, 0.05)
+        self.assertTrue(actual)
+
+    def test_orthogonal_within_tolerance2(self):
+        import numpy as np
+        from analyze import orthogonal
+
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((0, 0))
+        p3 = np.asarray((1, 0.04))
+        actual = orthogonal(p1, p2, p3, 0.04)
+        self.assertTrue(actual)
+
+
+class TestSameSide(unittest.TestCase):
+
+    def test_same_side_right(self):
+        import numpy as np
+        from analyze import same_side
+
+        start = np.asarray((0, 0))
+        end = np.asarray((1, 1))
+        p1 = np.asarray((1, 0))
+        p2 = np.asarray((2, 1))
+
+        actual = same_side(p1, start, end, p2)
+        self.assertTrue(actual)
+
+    def test_same_side_left(self):
+        import numpy as np
+        from analyze import same_side
+
+        start = np.asarray((0, 0))
+        end = np.asarray((1, 1))
+        p1 = np.asarray((0, 1))
+        p2 = np.asarray((1, 2))
+
+        actual = same_side(p1, start, end, p2)
+        self.assertTrue(actual)
+
+    def test_same_side_different_sides(self):
+        import numpy as np
+        from analyze import same_side
+
+        start = np.asarray((0, 0))
+        end = np.asarray((1, 1))
+        p1 = np.asarray((1, 0))
+        p2 = np.asarray((1, 2))
+
+        actual = same_side(p1, start, end, p2)
+        self.assertFalse(actual)
+
+
+class TestHasBox(unittest.TestCase):
+
+    def test_has_box_non_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0.5858, 1.414),
+            (2, 2),
+            (3.414, 1.414),
+            (4, 0),
+            (0, 0),
+            (0.5858, 1.414),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertFalse(actual)
+
+    def test_has_box_two_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (0, 2),
+            (1, 2),
+            (2, 1),
+            (2, 0),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)
+
+    def test_has_box_one_right_angle_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertFalse(actual)
+
+    def test_has_box_multiple_found(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)
+
+    def test_has_box_semicircle_single(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)
+
+    def test_has_box_parallelogram(self):
+        from analyze import has_box
+
+        input_points = [
+            (0, 0),
+            (1, 0),
+            (1, 1),
+            (0, 1),
+            (0, 0),
+        ]
+        tolerance = 0.6
+        angle_tolerance = 0.03
+
+        actual = has_box(input_points, tolerance, angle_tolerance)
+        self.assertTrue(actual)
