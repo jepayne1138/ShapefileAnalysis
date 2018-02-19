@@ -206,6 +206,16 @@ def remove_array_wrap(points):
     return points
 
 
+def rotation(points):
+    arr = remove_array_wrap(np.asarray(points))
+    top_point = get_top_point(arr)
+    top_point_idx = get_point_index_by_value(arr, top_point)
+    left_point = arr[top_point_idx - 1]
+    horiz_point = left_point[:] + [1, 0]
+    raw_angle = get_radians(horiz_point, left_point, top_point)
+    return (np.pi / 2) - abs((np.pi / 2) - raw_angle)
+
+
 def main():
     args = parse_arguments(sys.argv[1:])
 
