@@ -1129,3 +1129,245 @@ class TestNearestDistances(unittest.TestCase):
         }
 
         self.assertDictArrayValuesEqual(expected, actual)
+        self.assertTrue(actual)
+
+
+class TestGetPointIndexByValue(unittest.TestCase):
+
+    def test_get_point_index_by_value(self):
+        import numpy as np
+        from analyze import get_point_index_by_value
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+        ]
+        search_point = np.array((2, 1))
+        actual = get_point_index_by_value(points, search_point)
+
+        expected = 2
+        self.assertEqual(expected, actual)
+
+    def test_get_point_index_by_value_duplicate(self):
+        import numpy as np
+        from analyze import get_point_index_by_value
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((1, 2)),
+            np.array((0, 1)),
+        ]
+        search_point = np.array((1, 2))
+        actual = get_point_index_by_value(points, search_point)
+        expected = 1
+        self.assertEqual(expected, actual)
+
+
+class TestGetTopPoint(unittest.TestCase):
+
+    def test_get_top_point(self):
+        import numpy as np
+        from analyze import get_top_point
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+        ]
+        actual = get_top_point(points)
+
+        expected = np.array((1, 2))
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_get_top_point_two_equal_returns_right(self):
+        import numpy as np
+        from analyze import get_top_point
+
+        points = [
+            np.array((0, 0)),
+            np.array((0, 1)),
+            np.array((1, 1)),
+            np.array((1, 0)),
+            np.array((0, 0)),
+        ]
+        actual = get_top_point(points)
+
+        expected = np.array((1, 1))
+        self.assertTrue(np.array_equal(expected, actual))
+
+
+class TestRemoveArrayWrap(unittest.TestCase):
+
+    def test_remove_array_wrap(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_remove_array_wrap_first(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_remove_array_wrap_first_2(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+            np.array((1, 2)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_remove_array_wrap_first_2(self):
+        import numpy as np
+        from analyze import remove_array_wrap
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+            np.array((1, 2)),
+        ]
+        actual = remove_array_wrap(points)
+
+        expected = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+        ]
+        self.assertTrue(np.array_equal(expected, actual))
+
+
+class TestRotation(unittest.TestCase):
+
+    def test_rotation_has_wrap(self):
+        import numpy as np
+        from analyze import rotation
+
+        points = [
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+        ]
+        actual = rotation(points)
+
+        expected = np.pi / 4
+        self.assertAlmostEqual(expected, actual)
+
+    def test_rotation_top_is_first_with_wrap(self):
+        import numpy as np
+        from analyze import rotation
+
+        points = [
+            np.array((1, 2)),
+            np.array((2, 1)),
+            np.array((1, 0)),
+            np.array((0, 1)),
+            np.array((1, 2)),
+            np.array((2, 1)),
+        ]
+        actual = rotation(points)
+
+        expected = np.pi / 4
+        self.assertAlmostEqual(expected, actual)
+
+    def test_rotation_horizontal(self):
+        import numpy as np
+        from analyze import rotation
+
+        points = [
+            np.array((0, 0)),
+            np.array((0, 1)),
+            np.array((1, 1)),
+            np.array((1, 0)),
+        ]
+        actual = rotation(points)
+
+        expected = 0
+        self.assertAlmostEqual(expected, actual)
+
+    def test_rotation_angle_small(self):
+        import numpy as np
+        from analyze import rotation
+
+        points = [
+            np.array((0, 0)),
+            np.array((1, 0.41421356237)),
+            np.array((1, -1)),
+            np.array((0, -1)),
+        ]
+        actual = rotation(points)
+
+        expected = np.pi / 8
+        self.assertAlmostEqual(expected, actual)
+
+    def test_rotation_angle_small_reflected(self):
+        import numpy as np
+        from analyze import rotation
+
+        points = [
+            np.array((0, 0)),
+            np.array((-1, 0.41421356237)),
+            np.array((-1, -1)),
+            np.array((0, -1)),
+        ]
+        actual = rotation(points)
+
+        expected = np.pi / 8
+        self.assertAlmostEqual(expected, actual)
