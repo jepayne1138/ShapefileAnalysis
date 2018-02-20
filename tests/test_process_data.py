@@ -18,19 +18,19 @@ def assertArrayEquals(testcase, arr1, arr2):
 class TestLessOrClose(unittest.TestCase):
 
     def test_less_or_close_simple(self):
-        from analyze import less_or_close
+        from shapeanalysis.process_data import less_or_close
         self.assertTrue(less_or_close(0, 1))
 
     def test_less_or_close_greater(self):
-        from analyze import less_or_close
+        from shapeanalysis.process_data import less_or_close
         self.assertFalse(less_or_close(1, 0))
 
     def test_less_or_close_strict_equal(self):
-        from analyze import less_or_close
+        from shapeanalysis.process_data import less_or_close
         self.assertTrue(less_or_close(1, 1))
 
     def test_less_or_close_strict_float_close(self):
-        from analyze import less_or_close
+        from shapeanalysis.process_data import less_or_close
         # 1.01 - 1 = 0.010000000000000009
         self.assertTrue(less_or_close(1.01 - 1, 0.01))
 
@@ -38,23 +38,23 @@ class TestLessOrClose(unittest.TestCase):
 class TestModifiedPointList(unittest.TestCase):
 
     def test_modified_point_list_too_small(self):
-        from analyze import modified_point_list
+        from shapeanalysis.process_data import modified_point_list
         with self.assertRaises(ValueError):
             modified_point_list((1, 2))
 
     def test_modified_point_list_verify_start_and_end_same(self):
-        from analyze import modified_point_list
+        from shapeanalysis.process_data import modified_point_list
         with self.assertRaises(ValueError):
             modified_point_list((0, 1, 2))
 
     def test_modified_point_list_verify_each_element_len2(self):
-        from analyze import modified_point_list
+        from shapeanalysis.process_data import modified_point_list
         with self.assertRaises(ValueError):
             modified_point_list(((0, 0), (0, 1), (0, 2), 0))
 
     def test_modified_point_list_verify_second_element_wrapped(self):
         import numpy as np
-        from analyze import modified_point_list
+        from shapeanalysis.process_data import modified_point_list
         actual = modified_point_list(
             ((0, 0), (0, 1), (0, 2), (0, 3), (0, 0))
         )
@@ -73,7 +73,7 @@ class TestModifiedPointList(unittest.TestCase):
 
     def test_modified_point_list_input(self):
         import numpy as np
-        from analyze import modified_point_list
+        from shapeanalysis.process_data import modified_point_list
         actual = modified_point_list(
             [(0, 0), (0, 1), (0, 2), (0, 3), (0, 0)]
         )
@@ -94,7 +94,7 @@ class TestModifiedPointList(unittest.TestCase):
 class TestPointWindowIter(unittest.TestCase):
 
     def test_point_window_iter(self):
-        from analyze import point_window_iter
+        from shapeanalysis.process_data import point_window_iter
 
         test_iter = (0, 1, 2, 3, 0)
         actual = point_window_iter(test_iter)
@@ -106,7 +106,7 @@ class TestPointWindowIter(unittest.TestCase):
 class TestNeighborWindow(unittest.TestCase):
 
     def test_neighbor_window_index_1(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 2, 3, 4)
         actual = neighbor_window(test_seq, 1)
@@ -114,7 +114,7 @@ class TestNeighborWindow(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_neighbor_window_index_2(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 2, 3, 4)
         actual = neighbor_window(test_seq, 2)
@@ -122,7 +122,7 @@ class TestNeighborWindow(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_neighbor_window_index_3(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 2, 3, 4)
         actual = neighbor_window(test_seq, 3)
@@ -130,42 +130,42 @@ class TestNeighborWindow(unittest.TestCase):
         self.assertEqual(expected, actual)
 
     def test_neighbor_window_index_start_out_of_range(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 2, 3, 4)
         with self.assertRaises(IndexError):
             neighbor_window(test_seq, 0)
 
     def test_neighbor_window_index_end_out_of_range(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 2, 3, 4)
         with self.assertRaises(IndexError):
             neighbor_window(test_seq, 4)
 
     def test_neighbor_window_index_end_out_of_range_count2(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 2, 3, 4)
         with self.assertRaises(IndexError):
             neighbor_window(test_seq, 3, count=2)
 
     def test_neighbor_window_not_enough_elements(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1)
         with self.assertRaises(ValueError):
             neighbor_window(test_seq, 1)
 
     def test_neighbor_window_not_enough_elements_count2(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 3)
         with self.assertRaises(ValueError):
             neighbor_window(test_seq, 1, count=2)
 
     def test_neighbor_window_count2(self):
-        from analyze import neighbor_window
+        from shapeanalysis.process_data import neighbor_window
 
         test_seq = (0, 1, 2, 3, 4)
         actual = neighbor_window(test_seq, 1, count=2)
@@ -177,7 +177,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((0, 1))
@@ -188,7 +188,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_false(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((0.1, 1))
@@ -199,7 +199,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_within_tolerance(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((0.1, 1))
@@ -210,7 +210,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_negative_within_tolerance(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((-0.1, 1))
@@ -221,7 +221,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_has_tolerence_but_point_is_beyond(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((-0.5, 1))
@@ -232,7 +232,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_line_offset(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((1, 1))
@@ -243,7 +243,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_but_out_of_segment_negative(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((1, 1))
         b = np.asarray((.9, 1))
@@ -254,7 +254,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_but_out_of_segment_positive(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((1, 1))
         b = np.asarray((2, 2.1))
@@ -265,7 +265,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_but_out_of_segment_reversed(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((2, 2))
         b = np.asarray((2, 2.1))
@@ -276,7 +276,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_midpoint_on_start(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((0, 0))
@@ -287,7 +287,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_midpoint_on_end(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 0))
         b = np.asarray((0, 1))
@@ -298,7 +298,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_midpoint_on_start_screwed_translated(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((1, 1))
         b = np.asarray((1, 1))
@@ -309,7 +309,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_midpoint_on_end_screwed_translated(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((1, 1))
         b = np.asarray((2, 2))
@@ -320,7 +320,7 @@ class TestPointsInline(unittest.TestCase):
 
     def test_points_inline_midpoint_reverse_direction(self):
         import numpy as np
-        from analyze import points_inline
+        from shapeanalysis.process_data import points_inline
 
         a = np.asarray((0, 2))
         b = np.asarray((0, 1))
@@ -334,7 +334,7 @@ class TestMidpointProjectionOffset(unittest.TestCase):
 
     def test_midpoint_projection_offset_1(self):
         import numpy as np
-        from analyze import midpoint_projection_offset
+        from shapeanalysis.process_data import midpoint_projection_offset
 
         a = np.asarray((0, 0))
         b = np.asarray((1, 1))
@@ -345,7 +345,7 @@ class TestMidpointProjectionOffset(unittest.TestCase):
 
     def test_midpoint_projection_offset_2(self):
         import numpy as np
-        from analyze import midpoint_projection_offset
+        from shapeanalysis.process_data import midpoint_projection_offset
 
         a = np.asarray((0, 0))
         b = np.asarray((1, 2))
@@ -359,7 +359,7 @@ class TestBetweenNeighbors(unittest.TestCase):
 
     def test_between_neighbors_out_of_segment_positive(self):
         import numpy as np
-        from analyze import between_neighbors
+        from shapeanalysis.process_data import between_neighbors
 
         a = np.asarray((1, 1))
         b = np.asarray((2, 2.1))
@@ -369,7 +369,7 @@ class TestBetweenNeighbors(unittest.TestCase):
 
     def test_between_neighbors_but_out_of_segment_reversed(self):
         import numpy as np
-        from analyze import between_neighbors
+        from shapeanalysis.process_data import between_neighbors
 
         a = np.asarray((2, 2))
         b = np.asarray((2, 2.1))
@@ -379,7 +379,7 @@ class TestBetweenNeighbors(unittest.TestCase):
 
     def test_between_neighbors_in_segment(self):
         import numpy as np
-        from analyze import between_neighbors
+        from shapeanalysis.process_data import between_neighbors
 
         a = np.asarray((2, 2))
         b = np.asarray((1, 2))
@@ -389,7 +389,7 @@ class TestBetweenNeighbors(unittest.TestCase):
 
     def test_between_neighbors_on_start(self):
         import numpy as np
-        from analyze import between_neighbors
+        from shapeanalysis.process_data import between_neighbors
 
         a = np.asarray((2, 2))
         b = np.asarray((1, 1))
@@ -399,7 +399,7 @@ class TestBetweenNeighbors(unittest.TestCase):
 
     def test_between_neighbors_on_end(self):
         import numpy as np
-        from analyze import between_neighbors
+        from shapeanalysis.process_data import between_neighbors
 
         a = np.asarray((2, 2))
         b = np.asarray((2, 2))
@@ -411,32 +411,32 @@ class TestBetweenNeighbors(unittest.TestCase):
 class TestWithinTolerance(unittest.TestCase):
 
     def test_within_tolerance(self):
-        from analyze import within_tolerance
+        from shapeanalysis.process_data import within_tolerance
         actual = within_tolerance(90.001 - 90, 0.001)
         self.assertTrue(actual)
 
     def test_within_tolerance2(self):
-        from analyze import within_tolerance
+        from shapeanalysis.process_data import within_tolerance
         actual = within_tolerance(90.001 - 90, 0.0001)
         self.assertFalse(actual)
 
     def test_within_tolerance3(self):
-        from analyze import within_tolerance
+        from shapeanalysis.process_data import within_tolerance
         actual = within_tolerance(90 - 90.001, 0.0001)
         self.assertFalse(actual)
 
     def test_within_tolerance4(self):
-        from analyze import within_tolerance
+        from shapeanalysis.process_data import within_tolerance
         actual = within_tolerance(0.5 - 0, 0.4)
         self.assertFalse(actual)
 
     def test_within_tolerance5(self):
-        from analyze import within_tolerance
+        from shapeanalysis.process_data import within_tolerance
         actual = within_tolerance(0.5 - 0, 0.49, float_tol=0)
         self.assertFalse(actual)
 
     def test_within_tolerance_within_negative(self):
-        from analyze import within_tolerance
+        from shapeanalysis.process_data import within_tolerance
         with self.assertRaises(ValueError):
             within_tolerance(0.1, -0.1)
 
@@ -445,7 +445,7 @@ class TestGetRadians(unittest.TestCase):
 
     def test_get_radians_0(self):
         import numpy as np
-        from analyze import get_radians
+        from shapeanalysis.process_data import get_radians
 
         a = np.asarray((0, 1))
         b = np.asarray((0, 0))
@@ -457,7 +457,7 @@ class TestGetRadians(unittest.TestCase):
 
     def test_get_radians_pi(self):
         import numpy as np
-        from analyze import get_radians
+        from shapeanalysis.process_data import get_radians
 
         a = np.asarray((0, 1))
         b = np.asarray((0, 0))
@@ -469,7 +469,7 @@ class TestGetRadians(unittest.TestCase):
 
     def test_get_radians_half_pi(self):
         import numpy as np
-        from analyze import get_radians
+        from shapeanalysis.process_data import get_radians
 
         a = np.asarray((0, 1))
         b = np.asarray((0, 0))
@@ -481,7 +481,7 @@ class TestGetRadians(unittest.TestCase):
 
     def test_get_radians_half_pi_diff_magnitude(self):
         import numpy as np
-        from analyze import get_radians
+        from shapeanalysis.process_data import get_radians
 
         a = np.asarray((0, 3))
         b = np.asarray((0, 0))
@@ -493,7 +493,7 @@ class TestGetRadians(unittest.TestCase):
 
     def test_get_radians_half_pi_all_offset(self):
         import numpy as np
-        from analyze import get_radians
+        from shapeanalysis.process_data import get_radians
 
         a = np.asarray((1, 3))
         b = np.asarray((1, 1))
@@ -508,7 +508,7 @@ class TestPointDataList(unittest.TestCase):
 
     def test_point_data_list(self):
         import numpy as np
-        from analyze import PointData, point_data_list
+        from shapeanalysis.process_data import PointData, point_data_list
 
         valid_point_list = [
             np.asarray((0, 0)),
@@ -532,7 +532,7 @@ class TestRemoveInsignificant(unittest.TestCase):
 
     def test_remove_insignificant(self):
         import numpy as np
-        from analyze import PointData, remove_insignificant
+        from shapeanalysis.process_data import PointData, remove_insignificant
 
         point_list = [
             np.asarray((0, 0)),
@@ -561,7 +561,7 @@ class TestRemoveInsignificant(unittest.TestCase):
 
     def test_remove_insignificant_removal_order(self):
         import numpy as np
-        from analyze import PointData, remove_insignificant
+        from shapeanalysis.process_data import PointData, remove_insignificant
 
         point_list = [
             np.asarray((0, 0)),
@@ -592,7 +592,7 @@ class TestRemoveInsignificant(unittest.TestCase):
 
     def test_remove_insignificant_origin_removal(self):
         import numpy as np
-        from analyze import PointData, remove_insignificant
+        from shapeanalysis.process_data import PointData, remove_insignificant
 
         point_list = [
             np.asarray((0.5858, 1.414)),
@@ -626,7 +626,7 @@ class TestSignificantPoints(unittest.TestCase):
 
     def test_significant_points(self):
         import numpy as np
-        from analyze import significant_points
+        from shapeanalysis.process_data import significant_points
 
         input_points = [
             (0.5858, 1.414),
@@ -653,7 +653,7 @@ class TestOrthogonal(unittest.TestCase):
 
     def test_orthogonal_equal(self):
         import numpy as np
-        from analyze import orthogonal
+        from shapeanalysis.process_data import orthogonal
 
         p1 = np.asarray((0, 0))
         p2 = np.asarray((0, 1))
@@ -663,7 +663,7 @@ class TestOrthogonal(unittest.TestCase):
 
     def test_orthogonal_equal_reverse(self):
         import numpy as np
-        from analyze import orthogonal
+        from shapeanalysis.process_data import orthogonal
 
         p1 = np.asarray((1, 1))
         p2 = np.asarray((0, 1))
@@ -673,7 +673,7 @@ class TestOrthogonal(unittest.TestCase):
 
     def test_orthogonal_outside_tolerance(self):
         import numpy as np
-        from analyze import orthogonal
+        from shapeanalysis.process_data import orthogonal
 
         p1 = np.asarray((0, 1))
         p2 = np.asarray((0, 0))
@@ -683,7 +683,7 @@ class TestOrthogonal(unittest.TestCase):
 
     def test_orthogonal_within_tolerance1(self):
         import numpy as np
-        from analyze import orthogonal
+        from shapeanalysis.process_data import orthogonal
 
         p1 = np.asarray((0, 1))
         p2 = np.asarray((0, 0))
@@ -693,7 +693,7 @@ class TestOrthogonal(unittest.TestCase):
 
     def test_orthogonal_within_tolerance2(self):
         import numpy as np
-        from analyze import orthogonal
+        from shapeanalysis.process_data import orthogonal
 
         p1 = np.asarray((0, 1))
         p2 = np.asarray((0, 0))
@@ -706,7 +706,7 @@ class TestSameSide(unittest.TestCase):
 
     def test_same_side_right(self):
         import numpy as np
-        from analyze import same_side
+        from shapeanalysis.process_data import same_side
 
         start = np.asarray((0, 0))
         end = np.asarray((1, 1))
@@ -718,7 +718,7 @@ class TestSameSide(unittest.TestCase):
 
     def test_same_side_left(self):
         import numpy as np
-        from analyze import same_side
+        from shapeanalysis.process_data import same_side
 
         start = np.asarray((0, 0))
         end = np.asarray((1, 1))
@@ -730,7 +730,7 @@ class TestSameSide(unittest.TestCase):
 
     def test_same_side_different_sides(self):
         import numpy as np
-        from analyze import same_side
+        from shapeanalysis.process_data import same_side
 
         start = np.asarray((0, 0))
         end = np.asarray((1, 1))
@@ -744,7 +744,7 @@ class TestSameSide(unittest.TestCase):
 class TestHasBox(unittest.TestCase):
 
     def test_has_box_non_found(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0.5858, 1.414),
@@ -761,7 +761,7 @@ class TestHasBox(unittest.TestCase):
         self.assertFalse(actual)
 
     def test_has_box_two_found(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -778,7 +778,7 @@ class TestHasBox(unittest.TestCase):
         self.assertTrue(actual)
 
     def test_has_box_two_found_both_out_of_size(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -795,7 +795,7 @@ class TestHasBox(unittest.TestCase):
         self.assertFalse(actual)
 
     def test_has_box_two_found_low_in_change_bounds(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -814,7 +814,7 @@ class TestHasBox(unittest.TestCase):
         self.assertTrue(actual)
 
     def test_has_box_two_found_high_in_change_bounds(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -833,7 +833,7 @@ class TestHasBox(unittest.TestCase):
         self.assertTrue(actual)
 
     def test_has_box_two_found_both_out_change_bounds(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -852,7 +852,7 @@ class TestHasBox(unittest.TestCase):
         self.assertFalse(actual)
 
     def test_has_box_one_right_angle_found(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -867,7 +867,7 @@ class TestHasBox(unittest.TestCase):
         self.assertFalse(actual)
 
     def test_has_box_multiple_found(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -883,7 +883,7 @@ class TestHasBox(unittest.TestCase):
         self.assertTrue(actual)
 
     def test_has_box_semicircle_single(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 0),
@@ -899,7 +899,7 @@ class TestHasBox(unittest.TestCase):
         self.assertTrue(actual)
 
     def test_has_box_parallelogram(self):
-        from analyze import has_box
+        from shapeanalysis.process_data import has_box
 
         input_points = [
             (0, 1),
@@ -919,7 +919,7 @@ class TestDistance(unittest.TestCase):
 
     def test_distance1(self):
         import numpy as np
-        from analyze import distance
+        from shapeanalysis.process_data import distance
 
         p1 = np.asarray((0, 0))
         p2 = np.asarray((0, 1))
@@ -930,7 +930,7 @@ class TestDistance(unittest.TestCase):
 
     def test_distance2(self):
         import numpy as np
-        from analyze import distance
+        from shapeanalysis.process_data import distance
 
         p1 = np.asarray((0, 0))
         p2 = np.asarray((0, 2))
@@ -941,7 +941,7 @@ class TestDistance(unittest.TestCase):
 
     def test_distance3(self):
         import numpy as np
-        from analyze import distance
+        from shapeanalysis.process_data import distance
 
         p1 = np.asarray((0, 0))
         p2 = np.asarray((1, 1.7320508076))
@@ -955,7 +955,7 @@ class TestCentroid(unittest.TestCase):
 
     def test_centroid_square(self):
         import numpy as np
-        from analyze import centroid
+        from shapeanalysis.process_data import centroid
 
         points = np.asarray([
             np.asarray((0, 0)),
@@ -969,7 +969,7 @@ class TestCentroid(unittest.TestCase):
 
     def test_centroid_square_with_repeat(self):
         import numpy as np
-        from analyze import centroid
+        from shapeanalysis.process_data import centroid
 
         points = np.asarray([
             np.asarray((0, 0)),
@@ -984,7 +984,7 @@ class TestCentroid(unittest.TestCase):
 
     def test_centroid_triangle(self):
         import numpy as np
-        from analyze import centroid
+        from shapeanalysis.process_data import centroid
 
         points = np.asarray([
             np.asarray((0, 0)),
@@ -999,7 +999,7 @@ class TestCentroid(unittest.TestCase):
 class TestSplitList(unittest.TestCase):
 
     def test_split_list_empty(self):
-        from analyze import split_list
+        from shapeanalysis.process_data import split_list
 
         original = []
         split_indexes = []
@@ -1010,7 +1010,7 @@ class TestSplitList(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
     def test_split_list_only_zero(self):
-        from analyze import split_list
+        from shapeanalysis.process_data import split_list
 
         original = [1, 2, 3]
         split_indexes = [0]
@@ -1021,7 +1021,7 @@ class TestSplitList(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
     def test_split_list_only_empty(self):
-        from analyze import split_list
+        from shapeanalysis.process_data import split_list
 
         original = [1, 2, 3]
         split_indexes = []
@@ -1032,7 +1032,7 @@ class TestSplitList(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
     def test_split_list_none(self):
-        from analyze import split_list
+        from shapeanalysis.process_data import split_list
 
         original = [1, 2, 3]
         split_indexes = None
@@ -1043,7 +1043,7 @@ class TestSplitList(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
     def test_split_list_split1(self):
-        from analyze import split_list
+        from shapeanalysis.process_data import split_list
 
         original = [1, 2, 3, 4, 5]
         split_indexes = [0, 2]
@@ -1054,7 +1054,7 @@ class TestSplitList(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
     def test_split_list_split2(self):
-        from analyze import split_list
+        from shapeanalysis.process_data import split_list
 
         original = [1, 2, 3, 4, 5]
         split_indexes = [0, 2, 4]
@@ -1065,7 +1065,7 @@ class TestSplitList(unittest.TestCase):
         self.assertEqual(expected, list(actual))
 
     def test_split_list_split2_no_leading(self):
-        from analyze import split_list
+        from shapeanalysis.process_data import split_list
 
         original = [1, 2, 3, 4, 5]
         split_indexes = [2, 4]
@@ -1090,7 +1090,7 @@ class TestNearestDistances(unittest.TestCase):
 
     def test_nearest_distances_1_nearest(self):
         import numpy as np
-        from analyze import nearest_distances
+        from shapeanalysis.process_data import nearest_distances
 
         points = [
             np.asarray((0, 0)),
@@ -1111,7 +1111,7 @@ class TestNearestDistances(unittest.TestCase):
 
     def test_nearest_distances_2_nearest(self):
         import numpy as np
-        from analyze import nearest_distances
+        from shapeanalysis.process_data import nearest_distances
 
         points = [
             np.asarray((0, 0)),
@@ -1136,7 +1136,7 @@ class TestGetPointIndexByValue(unittest.TestCase):
 
     def test_get_point_index_by_value(self):
         import numpy as np
-        from analyze import get_point_index_by_value
+        from shapeanalysis.process_data import get_point_index_by_value
 
         points = [
             np.array((0, 1)),
@@ -1153,7 +1153,7 @@ class TestGetPointIndexByValue(unittest.TestCase):
 
     def test_get_point_index_by_value_duplicate(self):
         import numpy as np
-        from analyze import get_point_index_by_value
+        from shapeanalysis.process_data import get_point_index_by_value
 
         points = [
             np.array((0, 1)),
@@ -1173,7 +1173,7 @@ class TestGetTopPoint(unittest.TestCase):
 
     def test_get_top_point(self):
         import numpy as np
-        from analyze import get_top_point
+        from shapeanalysis.process_data import get_top_point
 
         points = [
             np.array((0, 1)),
@@ -1189,7 +1189,7 @@ class TestGetTopPoint(unittest.TestCase):
 
     def test_get_top_point_two_equal_returns_right(self):
         import numpy as np
-        from analyze import get_top_point
+        from shapeanalysis.process_data import get_top_point
 
         points = [
             np.array((0, 0)),
@@ -1208,7 +1208,7 @@ class TestRemoveArrayWrap(unittest.TestCase):
 
     def test_remove_array_wrap(self):
         import numpy as np
-        from analyze import remove_array_wrap
+        from shapeanalysis.process_data import remove_array_wrap
 
         points = [
             np.array((0, 1)),
@@ -1228,7 +1228,7 @@ class TestRemoveArrayWrap(unittest.TestCase):
 
     def test_remove_array_wrap_first(self):
         import numpy as np
-        from analyze import remove_array_wrap
+        from shapeanalysis.process_data import remove_array_wrap
 
         points = [
             np.array((0, 1)),
@@ -1249,7 +1249,7 @@ class TestRemoveArrayWrap(unittest.TestCase):
 
     def test_remove_array_wrap_first_2(self):
         import numpy as np
-        from analyze import remove_array_wrap
+        from shapeanalysis.process_data import remove_array_wrap
 
         points = [
             np.array((0, 1)),
@@ -1271,7 +1271,7 @@ class TestRemoveArrayWrap(unittest.TestCase):
 
     def test_remove_array_wrap_first_2(self):
         import numpy as np
-        from analyze import remove_array_wrap
+        from shapeanalysis.process_data import remove_array_wrap
 
         points = [
             np.array((0, 1)),
@@ -1296,7 +1296,7 @@ class TestMidLineRotation(unittest.TestCase):
 
     def test_mid_line_rotation(self):
         import numpy as np
-        from analyze import mid_line_rotation
+        from shapeanalysis.process_data import mid_line_rotation
 
         left_point = np.array((1, 2))
         right_point = np.array((2, 1))
@@ -1307,7 +1307,7 @@ class TestMidLineRotation(unittest.TestCase):
 
     def test_mid_line_rotation_horizontal(self):
         import numpy as np
-        from analyze import mid_line_rotation
+        from shapeanalysis.process_data import mid_line_rotation
 
         left_point = np.array((0, 0))
         right_point = np.array((0, 1))
@@ -1318,7 +1318,7 @@ class TestMidLineRotation(unittest.TestCase):
 
     def test_mid_line_rotation_angle_small(self):
         import numpy as np
-        from analyze import mid_line_rotation
+        from shapeanalysis.process_data import mid_line_rotation
 
         left_point = np.array((0, 0))
         right_point = np.array((1, 0.41421356237))
@@ -1329,7 +1329,7 @@ class TestMidLineRotation(unittest.TestCase):
 
     def test_mid_line_rotation_angle_small_reflected(self):
         import numpy as np
-        from analyze import mid_line_rotation
+        from shapeanalysis.process_data import mid_line_rotation
 
         left_point = np.array((0, 0))
         right_point = np.array((1, -0.41421356237))
