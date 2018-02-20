@@ -1292,82 +1292,48 @@ class TestRemoveArrayWrap(unittest.TestCase):
         self.assertTrue(np.array_equal(expected, actual))
 
 
-class TestRotation(unittest.TestCase):
+class TestMidLineRotation(unittest.TestCase):
 
-    def test_rotation_has_wrap(self):
+    def test_mid_line_rotation(self):
         import numpy as np
-        from analyze import rotation
+        from analyze import mid_line_rotation
 
-        points = [
-            np.array((0, 1)),
-            np.array((1, 2)),
-            np.array((2, 1)),
-            np.array((1, 0)),
-            np.array((0, 1)),
-        ]
-        actual = rotation(points)
+        left_point = np.array((1, 2))
+        right_point = np.array((2, 1))
+        actual = mid_line_rotation(left_point, right_point)
 
         expected = np.pi / 4
         self.assertAlmostEqual(expected, actual)
 
-    def test_rotation_top_is_first_with_wrap(self):
+    def test_mid_line_rotation_horizontal(self):
         import numpy as np
-        from analyze import rotation
+        from analyze import mid_line_rotation
 
-        points = [
-            np.array((1, 2)),
-            np.array((2, 1)),
-            np.array((1, 0)),
-            np.array((0, 1)),
-            np.array((1, 2)),
-            np.array((2, 1)),
-        ]
-        actual = rotation(points)
-
-        expected = np.pi / 4
-        self.assertAlmostEqual(expected, actual)
-
-    def test_rotation_horizontal(self):
-        import numpy as np
-        from analyze import rotation
-
-        points = [
-            np.array((0, 0)),
-            np.array((0, 1)),
-            np.array((1, 1)),
-            np.array((1, 0)),
-        ]
-        actual = rotation(points)
+        left_point = np.array((0, 0))
+        right_point = np.array((0, 1))
+        actual = mid_line_rotation(left_point, right_point)
 
         expected = 0
         self.assertAlmostEqual(expected, actual)
 
-    def test_rotation_angle_small(self):
+    def test_mid_line_rotation_angle_small(self):
         import numpy as np
-        from analyze import rotation
+        from analyze import mid_line_rotation
 
-        points = [
-            np.array((0, 0)),
-            np.array((1, 0.41421356237)),
-            np.array((1, -1)),
-            np.array((0, -1)),
-        ]
-        actual = rotation(points)
+        left_point = np.array((0, 0))
+        right_point = np.array((1, 0.41421356237))
+        actual = mid_line_rotation(left_point, right_point)
 
         expected = np.pi / 8
         self.assertAlmostEqual(expected, actual)
 
-    def test_rotation_angle_small_reflected(self):
+    def test_mid_line_rotation_angle_small_reflected(self):
         import numpy as np
-        from analyze import rotation
+        from analyze import mid_line_rotation
 
-        points = [
-            np.array((0, 0)),
-            np.array((-1, 0.41421356237)),
-            np.array((-1, -1)),
-            np.array((0, -1)),
-        ]
-        actual = rotation(points)
+        left_point = np.array((0, 0))
+        right_point = np.array((1, -0.41421356237))
+        actual = mid_line_rotation(left_point, right_point)
 
         expected = np.pi / 8
         self.assertAlmostEqual(expected, actual)
