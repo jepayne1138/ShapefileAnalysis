@@ -68,10 +68,17 @@ def main():
         rec_data.append([match_rec, centroid_point])
 
     distances = nearest_distances(centroid_points, 2)
-    for _, c_point in rec_data:
-        rec_data
+
+    main = []
     for i in range(len(rec_data)):
-        rec_data[i] += list(distances[rec_data[i][1].astype(np.float).tobytes()])
+        pid = rec_data[i][0].record[0]
+        near_dists = distances[rec_data[i][1].astype(np.float).tobytes()]
+        main.append((pid, near_dists[0], near_dists[1]))
+
+    # for _, c_point in rec_data:
+    #     rec_data
+    # for i in range(len(rec_data)):
+    #     rec_data[i] += list(distances[rec_data[i][1].astype(np.float).tobytes()])
 
     # import csv
     # with open('output.csv', 'w', newline='') as outputfile:
@@ -79,8 +86,9 @@ def main():
     #     for x in rec_data:
     #         csv_writer.writerow([x[0].record[0]] + [str(tuple(x[1]))] + x[2:])
 
-    conn = database.connection(args.output)
-    database.create_database(conn)
+    with database.connection(args.output) as conn:
+        database.create_database(conn)
+        database.insert_main(conn, main)
 
 
 if __name__ == '__main__':
