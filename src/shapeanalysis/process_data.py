@@ -263,3 +263,11 @@ def is_rectangle(points, line_tolerance, angle_tolerance):
                 return False
         return True
     return False
+
+
+def area(points):
+    arr = np.asarray(points)
+    return (1 / 2) * abs(
+        np.dot(arr[:,0], np.roll(arr[:,1], 1)) -
+        np.dot(np.roll(arr[:,0], 1), arr[:,1])
+    )

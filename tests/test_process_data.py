@@ -1406,3 +1406,66 @@ class TestIsRectangle(unittest.TestCase):
         actual = is_rectangle(points, line_tolerance, angle_tolerance)
 
         self.assertFalse(actual)
+
+
+class TestArea(unittest.TestCase):
+
+    def test_area_square1(self):
+        import numpy as np
+        from shapeanalysis.process_data import area
+
+        points = [
+            (0, 0),
+            (0, 1),
+            (1, 1),
+            (1, 0),
+        ]
+        actual = area(points)
+        expected = 1
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_area_square2(self):
+        import numpy as np
+        from shapeanalysis.process_data import area
+
+        points = [
+            (0, 0),
+            (0, 2),
+            (2, 2),
+            (2, 0),
+        ]
+        actual = area(points)
+        expected = 4
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_area_square_duplicate_points(self):
+        import numpy as np
+        from shapeanalysis.process_data import area
+
+        points = [
+            (0, 0),
+            (0, 2),
+            (2, 2),
+            (2, 0),
+            (0, 0),
+        ]
+        actual = area(points)
+        expected = 4
+
+        self.assertAlmostEqual(expected, actual)
+
+    def test_area_triangle(self):
+        import numpy as np
+        from shapeanalysis.process_data import area
+
+        points = [
+            (0, 0),
+            (2, 2),
+            (0, 2),
+        ]
+        actual = area(points)
+        expected = 2
+
+        self.assertAlmostEqual(expected, actual)
