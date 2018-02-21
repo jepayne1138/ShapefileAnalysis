@@ -38,6 +38,16 @@ def neighbor_window(seq, index, count=1):
     return seq[index - 1:index + count + 1]
 
 
+def wrap_to(seq, number):
+    # Undo any existing wrap
+    wrap_length = wrap_len(seq)
+    if wrap_length > 0:
+        seq = seq[:-wrap_length]
+
+    # Wrap to the given number
+    return np.append(seq, seq[:number], axis=0)
+
+
 def wrap_len(seq):
     if len(seq) <= 1:
         return 0

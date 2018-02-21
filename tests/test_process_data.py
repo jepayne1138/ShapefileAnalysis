@@ -1526,3 +1526,56 @@ class TestWrapLen(unittest.TestCase):
         expected = 2
 
         self.assertEqual(expected, actual)
+
+
+class TestWrapTo(unittest.TestCase):
+
+    def test_wrap_to0(self):
+        import numpy as np
+        from shapeanalysis.process_data import wrap_to
+
+        seq = [0, 1, 2, 3]
+        actual = wrap_to(seq, 0)
+        expected = [0, 1, 2, 3]
+
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_wrap_to1(self):
+        import numpy as np
+        from shapeanalysis.process_data import wrap_to
+
+        seq = [0, 1, 2, 3]
+        actual = wrap_to(seq, 1)
+        expected = [0, 1, 2, 3, 0]
+
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_wrap_to2(self):
+        import numpy as np
+        from shapeanalysis.process_data import wrap_to
+
+        seq = [0, 1, 2, 3]
+        actual = wrap_to(seq, 2)
+        expected = [0, 1, 2, 3, 0, 1]
+
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_wrap_to2_remove_existing(self):
+        import numpy as np
+        from shapeanalysis.process_data import wrap_to
+
+        seq = [0, 1, 2, 3, 0]
+        actual = wrap_to(seq, 2)
+        expected = [0, 1, 2, 3, 0, 1]
+
+        self.assertTrue(np.array_equal(expected, actual))
+
+    def test_wrap_to2_complex(self):
+        import numpy as np
+        from shapeanalysis.process_data import wrap_to
+
+        seq = [(0, 0), (0, 1), (0, 2), (0, 3)]
+        actual = wrap_to(seq, 2)
+        expected = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 0), (0, 1)]
+
+        self.assertTrue(np.array_equal(expected, actual))
