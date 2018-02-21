@@ -42,7 +42,7 @@ def modified_point_list(seq):
     if len(seq) < 3:
         raise ValueError("seq must have at least 3 elements to have neighbors")
     if not np.array_equal(seq[0], seq[-1]):
-        raise ValueError("First and last element must match")
+        seq = np.append(seq, [seq[0]], axis=0)
     return_seq = []
     for pnt in tuple(seq) + (seq[1],):
         try:
@@ -58,7 +58,10 @@ def point_window_iter(seq):
     # Iterates over groups of three points, where the input seq
     # has first and last the same, then add a final group with the
     # first/last element in the middle
-    elem_wrapped_seq = seq + (seq[1],)
+    if np.array_equal(seq[0], seq[-1]):
+        elem_wrapped_seq = tuple(seq) + (seq[1],)
+    else:
+        elem_wrapped_seq = seq
     for i in range(1, len(elem_wrapped_seq) - 1):
         yield neighbor_window(elem_wrapped_seq, i)
 
@@ -248,3 +251,15 @@ def mid_line_rotation(left_point, right_point):
     horiz_point = left_point[:] + [1, 0]
     raw_angle = get_radians(horiz_point, left_point, right_point)
     return raw_angle % (np.pi / 2)
+
+
+def is_rectangle(points, line_tolerance, angle_tolerance):
+    sig = significant_points(points, line_tolerance)
+    arr = remove_array_wrap(sig)
+    if len(arr) == 4:
+        np.append(arr, arr[0])
+        for (p1, p2, p3) in point_window_iter(sig):
+            if not orthogonal(p1, p2, p3, angle_tolerance):
+                return False
+        return True
+    return False

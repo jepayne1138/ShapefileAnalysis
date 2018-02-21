@@ -1337,3 +1337,72 @@ class TestMidLineRotation(unittest.TestCase):
 
         expected = np.pi / 8
         self.assertAlmostEqual(expected, actual)
+
+
+class TestIsRectangle(unittest.TestCase):
+
+    def test_is_rectangle_true(self):
+        import numpy as np
+        from shapeanalysis.process_data import is_rectangle
+
+        points = [
+            np.array((0, 0)),
+            np.array((0, 1)),
+            np.array((1, 1)),
+            np.array((1, 0)),
+        ]
+        line_tolerance = 0.6
+        angle_tolerance = 0.03
+        actual = is_rectangle(points, line_tolerance, angle_tolerance)
+
+        self.assertTrue(actual)
+
+    def test_is_rectangle_false(self):
+        import numpy as np
+        from shapeanalysis.process_data import is_rectangle
+
+        points = [
+            np.array((0, 0)),
+            np.array((0, 1)),
+            np.array((1, 1)),
+            np.array((1, -1)),
+        ]
+        line_tolerance = 0.6
+        angle_tolerance = 0.03
+        actual = is_rectangle(points, line_tolerance, angle_tolerance)
+
+        self.assertFalse(actual)
+
+    def test_is_rectangle_wrong_num_points_insignificant(self):
+        import numpy as np
+        from shapeanalysis.process_data import is_rectangle
+
+        points = [
+            np.array((0, 0)),
+            np.array((0, 1)),
+            np.array((1, 1)),
+            np.array((1, 0)),
+            np.array((0.5, 0)),
+        ]
+        line_tolerance = 0.6
+        angle_tolerance = 0.03
+        actual = is_rectangle(points, line_tolerance, angle_tolerance)
+
+        self.assertTrue(actual)
+
+    def test_is_rectangle_wrong_num_points(self):
+        import numpy as np
+        from shapeanalysis.process_data import is_rectangle
+
+        points = [
+            np.array((0, 0)),
+            np.array((0, 1)),
+            np.array((1, 1)),
+            np.array((1, 0)),
+            np.array((0, -1)),
+        ]
+        line_tolerance = 0.6
+        angle_tolerance = 0.03
+        actual = is_rectangle(points, line_tolerance, angle_tolerance)
+
+        self.assertFalse(actual)
