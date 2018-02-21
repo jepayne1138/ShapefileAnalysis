@@ -38,6 +38,16 @@ def neighbor_window(seq, index, count=1):
     return seq[index - 1:index + count + 1]
 
 
+def wrap_len(seq):
+    if len(seq) <= 1:
+        return 0
+    end_index = len(seq) - 1
+    first_match_index = get_point_index_by_value(seq, seq[-1])
+    if first_match_index != end_index:
+        return first_match_index + 1
+    return 0
+
+
 def modified_point_list(seq):
     if len(seq) < 3:
         raise ValueError("seq must have at least 3 elements to have neighbors")
@@ -54,7 +64,7 @@ def modified_point_list(seq):
     return return_seq
 
 
-def point_window_iter(seq):
+def point_window_iter(seq, window_count=1):
     # Iterates over groups of three points, where the input seq
     # has first and last the same, then add a final group with the
     # first/last element in the middle
@@ -63,7 +73,7 @@ def point_window_iter(seq):
     else:
         elem_wrapped_seq = seq
     for i in range(1, len(elem_wrapped_seq) - 1):
-        yield neighbor_window(elem_wrapped_seq, i)
+        yield neighbor_window(elem_wrapped_seq, i, count=window_count)
 
 
 def within_tolerance(value, within, float_tol=1e-9):
@@ -224,11 +234,16 @@ def split_list(original, split_indexes):
         yield original[s:e]
 
 
-def get_point_index_by_value(points, search_point):
+def get_point_index_by_value(search_list, search_elem):
+    if (len(np.shape(search_list)) - 1 != len(np.shape(search_elem))):
+        raise ValueError("Search element not correct dimensions for search list")
     # https://stackoverflow.com/a/18927811
-    arr = np.array(points)
-    search_arr = np.array(search_point)
-    return np.where(np.all(arr == search_arr, axis=1))[0][0]
+    search = np.asarray(search_list)
+    elem = np.asarray(search_elem)
+    match_arr = search == elem
+    if len(np.shape(search)) > 1:
+        match_arr = np.all(match_arr, axis=1)
+    return np.where(match_arr)[0][0]
 
 
 def get_top_point(points):

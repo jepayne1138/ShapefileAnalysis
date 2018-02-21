@@ -1469,3 +1469,60 @@ class TestArea(unittest.TestCase):
         expected = 2
 
         self.assertAlmostEqual(expected, actual)
+
+
+class TestWrapLen(unittest.TestCase):
+
+    def test_wrap_len_no_wrap(self):
+        from shapeanalysis.process_data import wrap_len
+
+        seq = [0, 1, 2, 3]
+        actual = wrap_len(seq)
+        expected = 0
+
+        self.assertEqual(expected, actual)
+
+    def test_wrap_len_wrap1(self):
+        from shapeanalysis.process_data import wrap_len
+
+        seq = [0, 1, 2, 3, 0]
+        actual = wrap_len(seq)
+        expected = 1
+
+        self.assertEqual(expected, actual)
+
+    def test_wrap_len_wrap2(self):
+        from shapeanalysis.process_data import wrap_len
+
+        seq = [0, 1, 2, 3, 0, 1]
+        actual = wrap_len(seq)
+        expected = 2
+
+        self.assertEqual(expected, actual)
+
+    def test_wrap_len_wrap_2d_no_wrap(self):
+        from shapeanalysis.process_data import wrap_len
+
+        seq = [(0, 0), (0, 1), (0, 2), (0, 3)]
+        actual = wrap_len(seq)
+        expected = 0
+
+        self.assertEqual(expected, actual)
+
+    def test_wrap_len_wrap_2d_wrap1(self):
+        from shapeanalysis.process_data import wrap_len
+
+        seq = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 0)]
+        actual = wrap_len(seq)
+        expected = 1
+
+        self.assertEqual(expected, actual)
+
+    def test_wrap_len_wrap_2d_wrap2(self):
+        from shapeanalysis.process_data import wrap_len
+
+        seq = [(0, 0), (0, 1), (0, 2), (0, 3), (0, 0), (0, 1)]
+        actual = wrap_len(seq)
+        expected = 2
+
+        self.assertEqual(expected, actual)
