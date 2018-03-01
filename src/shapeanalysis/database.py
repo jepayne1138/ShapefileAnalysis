@@ -6,7 +6,7 @@ def create_database(conn):
 
     # Table "main"
     c.execute("""drop table if exists main""")
-    c.execute("""create table main (pid, nearest1, nearest2)""")
+    c.execute("""create table main (pid, nearest1, nearest2, numpoints)""")
 
     # Table "rectangle"
     c.execute("""drop table if exists rectangle""")
@@ -23,8 +23,8 @@ def insert_main(conn, data):
     c.executemany(
         """
         insert into main
-        (pid, nearest1, nearest2)
-        values (?, ?, ?)
+        (pid, nearest1, nearest2, numpoints)
+        values (?, ?, ?, ?)
         """,
         data
     )

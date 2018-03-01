@@ -186,7 +186,7 @@ def has_box(points, tolerance, angle_tolerance, min_len=10, max_len=80):
 
     # Under 5 and the box is not possible
     if len(sig_points) < 5:
-        return False
+        return []
 
     for i in range(1, len(sig_points) - 2):
         p1, p2, p3, p4 = neighbor_window(sig_points, i, count=2)
@@ -197,12 +197,12 @@ def has_box(points, tolerance, angle_tolerance, min_len=10, max_len=80):
                 same_side(p1, p2, p3, p4) and
                 less_or_close(mid_dist, max_len) and
                 less_or_close(min_len, mid_dist)):
-            return True
-    return False
+            return [p1, p2, p3, p4]
+    return []
 
 
 def distance(pnt1, pnt2):
-    return np.linalg.norm(pnt2 - pnt1)
+    return np.linalg.norm(np.asarray(pnt2) - np.asarray(pnt1))
 
 
 def centroid(points):
@@ -283,11 +283,11 @@ def is_rectangle(points, line_tolerance, angle_tolerance):
     arr = remove_array_wrap(sig)
     if len(arr) == 4:
         np.append(arr, arr[0])
-        for (p1, p2, p3) in point_window_iter(sig):
+        for (p1, p2, p3) in point_window_iter(wrap_to(sig, 2)):
             if not orthogonal(p1, p2, p3, angle_tolerance):
-                return False
-        return True
-    return False
+                return []
+        return wrap_to(arr, 1)
+    return []
 
 
 def area(points):
