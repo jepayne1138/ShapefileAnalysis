@@ -66,7 +66,6 @@ def main():
         for rec in shapeRecs
         for points in split_list(rec.shape.points, rec.shape.parts)
     ]
-    # [:1000]
 
     # total = len(point_list)
     # matches = []
@@ -78,16 +77,16 @@ def main():
     #         matches.append((rec, sig_points))
 
     # Get center points
-    logger.info('Getting nearest distances...')
+    logger.info('Getting number significant points...')
     nearest_list = []
-    centroid_points = [centroid(shape) for (shape, _) in shape_list]
-    distances = nearest_distances(centroid_points, 2)
+    # centroid_points = [centroid(shape) for (shape, _) in shape_list]
+    # distances = nearest_distances(centroid_points, 2)
     for i in range(len(shape_list)):
         num_sig_points = len(remove_array_wrap(significant_points(shape_list[i][0], 0.6)))
         shapeRec = shape_list[i][1]
         pid = shapeRec.record[0]
-        near_dists = distances[centroid_points[i].astype(np.float).tobytes()]
-        nearest_list.append((pid, near_dists[0], near_dists[1], num_sig_points))
+        # near_dists = distances[centroid_points[i].astype(np.float).tobytes()]
+        nearest_list.append((pid, num_sig_points))
 
     # Get rectangles
     logger.info('Getting rectangle matches...')
@@ -130,7 +129,9 @@ def main():
             rectangle_list.append(tuple(rec_list_add))
 
     # Get boxlike
+    logger.info('Getting boxlike...')
     boxlike_list = []
+    boxlike_shapes = []
     for i in range(len(shape_list)):
         boxlike_points = has_box(shape_list[i][0], 0.6, 0.03, min_len=10, max_len=80)
         if len(boxlike_points) > 0:
@@ -146,7 +147,14 @@ def main():
                 get_radians(p2, p3, p4),
                 distance(p3, p4),
             ]
+            boxlike_shapes.append(shape_list[i][0])
             boxlike_list.append(tuple(boxlike_list_add))
+    logger.info('Getting nearest distances...')
+    centroid_points = [centroid(shape) for shape in boxlike_shapes]
+    distances = nearest_distances(centroid_points, 2)
+    for i in range(len(boxlike_shapes)):
+        near_dists = distances[centroid_points[i].astype(np.float).tobytes()]
+        boxlike_list[i] += (near_dists[0], near_dists[1])
 
     with database.connection(args.output) as conn:
         logger.info('Rebuilding database...')

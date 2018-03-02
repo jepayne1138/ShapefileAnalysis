@@ -6,7 +6,7 @@ def create_database(conn):
 
     # Table "main"
     c.execute("""drop table if exists main""")
-    c.execute("""create table main (pid, nearest1, nearest2, numpoints)""")
+    c.execute("""create table main (pid, numpoints)""")
 
     # Table "rectangle"
     c.execute("""drop table if exists rectangle""")
@@ -14,7 +14,7 @@ def create_database(conn):
 
     # Table "boxlike"
     c.execute("""drop table if exists boxlike""")
-    c.execute("""create table boxlike (pid, hangle, left, langle, mid, rangle, right)""")
+    c.execute("""create table boxlike (pid, hangle, left, langle, mid, rangle, right ,nearest1, nearest2)""")
 
 
 def insert_main(conn, data):
@@ -23,8 +23,8 @@ def insert_main(conn, data):
     c.executemany(
         """
         insert into main
-        (pid, nearest1, nearest2, numpoints)
-        values (?, ?, ?, ?)
+        (pid, numpoints)
+        values (?, ?)
         """,
         data
     )
@@ -36,8 +36,8 @@ def insert_boxlike(conn, data):
     c.executemany(
         """
         insert into boxlike
-        (pid, hangle, left, langle, mid, rangle, right)
-        values (?, ?, ?, ?, ?, ?, ?)
+        (pid, hangle, left, langle, mid, rangle, right, nearest1, nearest2)
+        values (?, ?, ?, ?, ?, ?, ?, ?, ?)
         """,
         data
     )
